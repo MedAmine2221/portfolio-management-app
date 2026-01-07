@@ -27,7 +27,7 @@ import {
 } from "date-fns";
 
 import type { ICalendarCell, IEvent } from "@/calendar/interfaces";
-import type { TCalendarView, TVisibleHours, TWorkingHours } from "@/calendar/types";
+import type { TCalendarView, TVisibleHours } from "@/calendar/types";
 
 // ================ Header helper functions ================ //
 
@@ -139,12 +139,6 @@ export function getEventBlockStyle(event: IEvent, day: Date, groupIndex: number,
   const left = groupIndex * width;
 
   return { top: `${top}%`, width: `${width}%`, left: `${left}%` };
-}
-
-export function isWorkingHour(day: Date, hour: number, workingHours: TWorkingHours) {
-  const dayIndex = day.getDay() as keyof typeof workingHours;
-  const dayHours = workingHours[dayIndex];
-  return hour >= dayHours.from && hour < dayHours.to;
 }
 
 export function getVisibleHours(visibleHours: TVisibleHours, singleDayEvents: IEvent[]) {
