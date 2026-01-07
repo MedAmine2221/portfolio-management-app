@@ -71,13 +71,13 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex gap-2">
-          <Link isExternal aria-label="Twitter" href={siteConfig.links.twitter}>
+          <Link isExternal aria-label="Twitter" href={siteConfig.links.facebook}>
             <FiFacebook size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
-          <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
+          <Link isExternal aria-label="Discord" href={siteConfig.links.instagram}>
             <FiInstagram size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
-          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
+          <Link isExternal aria-label="Github" href={siteConfig.links.linkedin}>
             <FiLinkedin size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>

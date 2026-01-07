@@ -2,6 +2,8 @@
 import { FiFacebook, FiLinkedin, FiInstagram } from "react-icons/fi";
 import AuthForm from "@/components/app/auth-form";
 import Image from "next/image";
+import { siteConfig } from "@/config/site";
+import { Link } from "@heroui/link";
 export default function Auth() {
   return (
     <div className="w-full flex items-center justify-center p-4">
@@ -23,9 +25,15 @@ export default function Auth() {
             </div>
 
             <div className="flex items-center justify-center gap-6">
-              <FiFacebook className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
-              <FiLinkedin className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
-              <FiInstagram className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
+              <Link isExternal aria-label="Facebook" href={siteConfig.links.facebook}>
+                <FiFacebook className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
+              </Link>
+              <Link isExternal aria-label="Linkedin" href={siteConfig.links.linkedin}>
+                <FiLinkedin className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
+              </Link>
+              <Link isExternal aria-label="Instagram" href={siteConfig.links.instagram}>
+                <FiInstagram className="text-black/50 text-3xl cursor-pointer hover:text-sky-700 transition-colors" />
+              </Link>
             </div>
           </div>
         </div>
