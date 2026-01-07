@@ -32,7 +32,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
             <div className="flex items-start gap-2">
               <User className="mt-1 size-4 shrink-0" />
               <div>
-                <p className="text-sm font-medium">Responsible</p>
+                <p className="text-sm font-medium">Clinet</p>
                 <p className="text-sm text-muted-foreground">{event.user.name}</p>
               </div>
             </div>

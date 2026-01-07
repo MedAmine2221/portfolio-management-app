@@ -12,11 +12,6 @@ export default async function Layout({ children }: { children: React.ReactNode }
       <div className="mx-auto flex max-w-screen flex-col gap-4 px-8 py-4">
         <Navbar />
         {children}
-        <p className="text-center">All Rights Reserved, 
-          <Link>
-            Mohamed Amine LAZREG
-          </Link>
-        </p>
       </div>
     </CalendarProvider>
   );

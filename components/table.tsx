@@ -17,9 +17,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Chip,
-  User,
   Pagination,
 } from "@heroui/react";
+import { NameAbreviation } from "@/lib/utils";
 
 /* ================= ICONS ================= */
 
@@ -60,36 +60,35 @@ export const VerticalDotsIcon = (props: IconSvgProps) => (
 
 type AppUser = {
   id: string;
-  username: string;
-  phoneNumber: string;
-  lang: string;
-  imageUrl: string;
-  freePeriod: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  object: string;
+  message: string;
   createdAt: string;
-  address: string;
-  goals: any[];
-  validatedAccount: boolean;
+  progress: "to do" | "in progress" | "done"
 };
-
 /* ================= COLUMNS ================= */
 
 const columns = [
-  { name: "USERNAME", uid: "username", sortable: true },
-  { name: "PHONE", uid: "phoneNumber", sortable: true },
-  { name: "LANG", uid: "lang", sortable: true },
-  { name: "FREE PERIOD", uid: "freePeriod", sortable: true },
-  { name: "GOALS", uid: "goals" },
+  { name: "", uid: "" },
+  { name: "FIRSTNAME", uid: "firstName", sortable: true },
+  { name: "LASTNAME", uid: "lastName", sortable: true },
+  { name: "EMAIL", uid: "email", sortable: false },
+  { name: "OBJECT", uid: "object", sortable: false },
+  { name: "MESSAGE", uid: "message", sortable: false },
   { name: "CREATED", uid: "createdAt", sortable: true },
-  { name: "VALIDATED", uid: "validatedAccount", sortable: true },
-  // { name: "ACTIONS", uid: "actions" },
+  { name: "PROGRESS", uid: "progress", sortable: false },
+  { name: "ACTIONS", uid: "actions" },
 ];
 
 const INITIAL_VISIBLE_COLUMNS = [
-  "username",
-  "phoneNumber",
-  "lang",
-  "validatedAccount",
-  // "actions",
+  "email",
+  "object",
+  "createdAt",
+  "progress",
+  "actions",
+  ""
 ];
 
 /* ================= COMPONENT ================= */
@@ -103,7 +102,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
   const [page, setPage] = React.useState(1);
   const [sortDescriptor, setSortDescriptor] =
     React.useState<SortDescriptor>({
-      column: "username",
+      column: "lastName",
       direction: "ascending",
     });
 
@@ -111,7 +110,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
   const filteredItems = React.useMemo(() => {
     return data.filter((user) =>
-      user.username
+      user.firstName
         .toLowerCase()
         .includes(filterValue.toLowerCase())
     );
@@ -142,32 +141,40 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
   const renderCell = (user: AppUser, columnKey: React.Key) => {
     switch (columnKey) {
-      case "username":
+      case "":
         return (
-          <User
-            name={user.username}
-            description={user.lang}
-            avatarProps={{ src: user.imageUrl || undefined }}
-          />
+            <div className="mr-4 rounded-full bg-default-100 border border-default-300 w-10 h-10 flex justify-center items-center"> 
+              <p className="mx-2 text-xl font-bold text-default-600">
+                {NameAbreviation(user.lastName, user.firstName)} 
+              </p> 
+            </div>
         );
+      case "firstName":
+        return user.firstName || "—";
 
-      case "phoneNumber":
-        return user.phoneNumber || "—";
+      case "lastName":
+        return user.lastName || "—";
 
-      case "freePeriod":
-        return `${user.freePeriod} day(s) ago`;
+      case "email":
+        return user.email || "—";
 
-      case "goals":
-        return user.goals.length !== 0 ? user.goals.map((goal, index)=> index+1 + " - " + goal.name + "\n" ) : "—";
+      case "object":
+        return user.object || "—";
 
-      case "validatedAccount":
+      case "message":
+        return user.message || "—";
+
+      case "createdAt":
+        return user.createdAt || "—";
+
+      case "progress":
         return (
           <Chip
-            color={user.validatedAccount ? "success" : "danger"}
+            color={user.progress === "to do" ? "danger" : user.progress === "in progress" ? "warning" : "success"}
             size="sm"
             variant="flat"
           >
-            {user.validatedAccount ? "Validated" : "Not validated"}
+            {user.progress}
           </Chip>
         );
 
@@ -222,7 +229,7 @@ console.log(data);
         <div className="flex justify-between gap-3">
           <Input
             isClearable
-            placeholder="Search username..."
+            placeholder="Search last name..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => setFilterValue("")}

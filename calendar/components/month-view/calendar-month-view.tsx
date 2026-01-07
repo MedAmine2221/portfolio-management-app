@@ -17,6 +17,7 @@ const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function CalendarMonthView({ singleDayEvents, multiDayEvents }: IProps) {
   const { selectedDate } = useCalendar();
+  console.log("singleDayEvents ",singleDayEvents, " multiDayEvents ",multiDayEvents);
 
   const allEvents = [...multiDayEvents, ...singleDayEvents];
 

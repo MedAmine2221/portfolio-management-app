@@ -1,36 +1,29 @@
 import AppTables from "@/components/table";
+import { adminDb } from "@/config/firebase-admin.init";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
-  const userData = [
-    {
-      id: "1",
-      username: "Tony Reichert",
-      phoneNumber: "CEO",
-      lang: "Management",
-      freePeriod: 5,
-      goals: ["29"],
-      createdAt: "20-01-2025",
-      imageUrl: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-      address: "ddd",
-      validatedAccount: true,
-    },
-    {
-      id: "2",
-      username: "Zoey Lang",
-      phoneNumber: "Technical Lead",
-      lang: "Development",
-      freePeriod: 5,
-      goals: ["25"],
-      address: "ddd",
-      createdAt: "20-01-2025",
-      imageUrl: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-      validatedAccount: true,
-    },
-  ];
+  type AppUser = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    object: string;
+    message: string;
+    createdAt: string;
+    progress: "to do" | "in progress" | "done"
+  };
+  const snapshot = await adminDb.collection("contact").get();
+  const users = snapshot.docs.map((doc) => {
+    const data = doc.data() as Omit<AppUser, 'id'>;
+    return {
+      id: doc.id,
+      ...data,
+    };
+  }) as AppUser[];
   return (
 
-        <div className="p-6 m-4">
-          <AppTables data={userData} />
-        </div>
+    <div className="p-6 m-4">
+      <AppTables data={users} />
+    </div>
   );
 }

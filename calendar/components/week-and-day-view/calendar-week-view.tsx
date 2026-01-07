@@ -21,6 +21,8 @@ interface IProps {
 }
 
 export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
+  console.log("singleDayEvents ",singleDayEvents, " multiDayEvents ",multiDayEvents);
+  
   const { selectedDate, workingHours, visibleHours } = useCalendar();
 
   const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);

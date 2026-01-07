@@ -72,16 +72,16 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal aria-label="Twitter" href={siteConfig.links.twitter}>
-            <FiFacebook size={20} className="text-default-500" />
+            <FiFacebook size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
           <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
-            <FiInstagram size={20} className="text-default-500" />
+            <FiInstagram size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <FiLinkedin size={20} className="text-default-500" />
+            <FiLinkedin size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <FiGithub size={20} className="text-default-500" />
+            <FiGithub size={20} className="hover:text-sky-700 text-default-500" />
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
