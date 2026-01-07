@@ -20,6 +20,7 @@ import {
   Pagination,
 } from "@heroui/react";
 import { NameAbreviation } from "@/lib/utils";
+import { AppUser } from "@/types";
 
 /* ================= ICONS ================= */
 
@@ -55,20 +56,6 @@ export const VerticalDotsIcon = (props: IconSvgProps) => (
     <circle cx="12" cy="19" r="2" fill="currentColor" />
   </svg>
 );
-
-/* ================= TYPES ================= */
-
-type AppUser = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  object: string;
-  message: string;
-  createdAt: string;
-  progress: "to do" | "in progress" | "done"
-};
-/* ================= COLUMNS ================= */
 
 const columns = [
   { name: "", uid: "" },

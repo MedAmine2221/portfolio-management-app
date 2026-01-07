@@ -3,8 +3,8 @@
 import { createContext, useContext, useState } from "react";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { IEvent, IUser } from "@/calendar/interfaces";
-import type { TBadgeVariant, TVisibleHours } from "@/calendar/types";
+import type { IUser } from "@/types/interfaces";
+import { TBadgeVariant, TVisibleHours } from "@/types";
 
 interface ICalendarContext {
   selectedDate: Date;
@@ -13,28 +13,15 @@ interface ICalendarContext {
   setSelectedUserId: (userId: IUser["id"] | "all") => void;
   badgeVariant: TBadgeVariant;
   setBadgeVariant: (variant: TBadgeVariant) => void;
-  users: IUser[];
   visibleHours: TVisibleHours;
   setVisibleHours: Dispatch<SetStateAction<TVisibleHours>>;
-  events: IEvent[];
-  setLocalEvents: Dispatch<SetStateAction<IEvent[]>>;
 }
 
 const CalendarContext = createContext({} as ICalendarContext);
 
-const WORKING_HOURS = {
-  0: { from: 8, to: 18 },
-  1: { from: 8, to: 18 },
-  2: { from: 8, to: 17 },
-  3: { from: 8, to: 17 },
-  4: { from: 8, to: 17 },
-  5: { from: 8, to: 17 },
-  6: { from: 8, to: 12 },
-};
-
 const VISIBLE_HOURS = { from: 8, to: 22 };
 
-export function CalendarProvider({ children, users, events }: { children: React.ReactNode; users: IUser[]; events: IEvent[] }) {
+export function CalendarProvider({ children }: { children: React.ReactNode }) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -44,8 +31,6 @@ export function CalendarProvider({ children, users, events }: { children: React.
   // It's used here just to simulate the update of the events.
   // In a real scenario, the events would be updated in the backend
   // and the request that fetches the events should be refetched
-  const [localEvents, setLocalEvents] = useState<IEvent[]>(events);
-
   const handleSelectDate = (date: Date | undefined) => {
     if (!date) return;
     setSelectedDate(date);
@@ -60,12 +45,8 @@ export function CalendarProvider({ children, users, events }: { children: React.
         setSelectedUserId,
         badgeVariant,
         setBadgeVariant,
-        users,
         visibleHours,
         setVisibleHours,
-        // If you go to the refetch approach, you can remove the localEvents and pass the events directly
-        events: localEvents,
-        setLocalEvents,
       }}
     >
       {children}

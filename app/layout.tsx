@@ -22,7 +22,9 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body>
+      <body
+        cz-shortcut-listen="true"
+      >
         <Providers>
           <div className="relative flex flex-col">
             <main>

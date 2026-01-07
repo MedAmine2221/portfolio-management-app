@@ -26,8 +26,8 @@ import {
   isWithinInterval,
 } from "date-fns";
 
-import type { ICalendarCell, IEvent } from "@/calendar/interfaces";
-import type { TCalendarView, TVisibleHours } from "@/calendar/types";
+import type { ICalendarCell, IEvent } from "@/types/interfaces";
+import { TCalendarView, TVisibleHours } from "@/types";
 
 // ================ Header helper functions ================ //
 
@@ -142,8 +142,8 @@ export function getEventBlockStyle(event: IEvent, day: Date, groupIndex: number,
 }
 
 export function getVisibleHours(visibleHours: TVisibleHours, singleDayEvents: IEvent[]) {
-  let earliestEventHour = visibleHours.from;
-  let latestEventHour = visibleHours.to;
+  let earliestEventHour = visibleHours?.from;
+  let latestEventHour = visibleHours?.to;
 
   singleDayEvents.forEach(event => {
     const startHour = parseISO(event.startDate).getHours();
@@ -159,8 +159,6 @@ export function getVisibleHours(visibleHours: TVisibleHours, singleDayEvents: IE
 
   return { hours, earliestEventHour, latestEventHour };
 }
-
-// ================ Month view helper functions ================ //
 
 export function getCalendarCells(selectedDate: Date): ICalendarCell[] {
   const currentYear = selectedDate.getFullYear();
