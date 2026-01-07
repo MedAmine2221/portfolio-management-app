@@ -14,7 +14,7 @@ export default function AuthForm() {
   const[isPassword, setIsPassword]=useState(true);
   const router = useRouter();
   return (
-    <form onSubmit={handleSubmit((data) => router.push("/dashboard"))} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit((data) => router.push("/calendar/week-view"))} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <label className={`${!!errors["email"] ? "text-red-300":"text-white"} font-medium mb-2`}>Email</label>
         <div className="relative">

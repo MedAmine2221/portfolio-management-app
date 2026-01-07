@@ -3,7 +3,7 @@ import { FiFacebook, FiLinkedin, FiInstagram } from "react-icons/fi";
 import AuthForm from "@/components/app/auth-form";
 export default function Auth() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 flex items-center justify-center p-4">
+    <div className="w-full flex items-center justify-center p-4">
       <div className="w-full max-w-md bg-white/10 backdrop-blur-sm shadow-2xl rounded-2xl p-8 flex flex-col gap-6">
         <h1 className="text-4xl text-white font-bold text-center">Welcome Back</h1>
         <AuthForm />

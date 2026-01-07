@@ -1,31 +1,40 @@
+"use client";;
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
-  NavbarMenu,
   NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
+  NavbarMenu,
 } from "@heroui/navbar";
 import { Button } from "@heroui/button";
-import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
-import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
-import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
-import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
-  Logo,
-} from "@/components/icons";
+import { GithubIcon, SearchIcon } from "@/components/icons";
+import Image from "next/image";
+import { FiFacebook, FiGithub, FiInstagram, FiLinkedin, FiLogOut } from "react-icons/fi";
+import { useRouter } from "next/navigation";
+import NavMenu from "./app/nav-menu";
+import { useState } from "react";
 
 export const Navbar = () => {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const match = siteConfig.navItems.find(
+        (item) => item.label.toLowerCase() === search.toLowerCase(),
+      );
+
+      if (match) router.push(match.href);
+      else alert("Page not found");
+    }
+  };
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -33,44 +42,27 @@ export const Navbar = () => {
         inputWrapper: "bg-default-100",
         input: "text-sm",
       }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
       placeholder="Search..."
       startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+        <SearchIcon className="text-base text-default-400 pointer-events-none" />
       }
       type="search"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      onKeyDown={handleKeyDown}
     />
   );
-
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+          <NextLink className="flex justify-start items-center gap-1" href="/calendar/week-view">
+            <Image alt= "amine" src={"/amine.png"} width={75} height={75} />
+            <p className="font-bold text-inherit">Mohamed Amine LAZREG</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
+          <NavMenu />
         </ul>
       </NavbarContent>
 
@@ -80,13 +72,16 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal aria-label="Twitter" href={siteConfig.links.twitter}>
-            <TwitterIcon className="text-default-500" />
+            <FiFacebook size={20} className="text-default-500" />
           </Link>
           <Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
-            <DiscordIcon className="text-default-500" />
+            <FiInstagram size={20} className="text-default-500" />
           </Link>
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-            <GithubIcon className="text-default-500" />
+            <FiLinkedin size={20} className="text-default-500" />
+          </Link>
+          <Link isExternal aria-label="Github" href={siteConfig.links.github}>
+            <FiGithub size={20} className="text-default-500" />
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
@@ -94,12 +89,12 @@ export const Navbar = () => {
           <Button
             isExternal
             as={Link}
-            className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
+            className="text-sm text-red-700 bg-red-100 border border-red-200 font-normal"
+            onClick={()=>router.replace("/auth")}
+            startContent={<FiLogOut size={20} color="var(--color-red-700)" />}
             variant="flat"
           >
-            Sponsor
+            Logout
           </Button>
         </NavbarItem>
       </NavbarContent>

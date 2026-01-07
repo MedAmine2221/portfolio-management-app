@@ -23,7 +23,7 @@ export default function RootLayout({
     <html suppressHydrationWarning lang="en">
       <head />
       <body>
-        <Providers themeProps={{ attribute: "class"}}>
+        <Providers>
           <div className="relative flex flex-col">
             <main>
               {children}
