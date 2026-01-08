@@ -24,9 +24,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearProfile } from "@/redux/profile/profileReducer";
 import { removeToken } from "@/lib/cookies-management";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 
 export const Navbar = () => {
   const profile = useSelector((item: RootState)=> item?.profile?.items);
+  const loading = useSelector((item: RootState)=> item?.loading?.loading);
   const dispatch = useDispatch();  
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -59,13 +61,20 @@ export const Navbar = () => {
     />
   );
   const logout = async () => {
-    await fetch("/api/admin-verify", {
-      method: "POST",
-      body: JSON.stringify({ uid: profile?.uid }),
-    });
-    dispatch(clearProfile());
-    await removeToken();
-    router.replace("/auth");
+    try {
+      dispatch(setLoadingTrue());
+      await fetch("/api/admin-verify", {
+        method: "POST",
+        body: JSON.stringify({ uid: profile?.uid }),
+      });
+      dispatch(clearProfile());
+      await removeToken();
+      router.replace("/auth");
+    } catch (error) {
+     console.error(error);
+    }finally{
+      dispatch(setLoadingFalse());
+    }
   }
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
@@ -102,6 +111,7 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           <Button
+            disabled={loading}
             isExternal
             as={Link}
             className="text-sm text-red-700 bg-red-100 border border-red-200 font-normal"
@@ -109,7 +119,7 @@ export const Navbar = () => {
             startContent={<FiLogOut size={20} color="var(--color-red-700)" />}
             variant="flat"
           >
-            Logout
+            {loading ? "LoggingOut..." : "Logout"}
           </Button>
         </NavbarItem>
       </NavbarContent>

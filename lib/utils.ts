@@ -4,6 +4,7 @@ import { clsx, type ClassValue } from "clsx";
 import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { saveToken } from "./cookies-management";
 import { setProfile } from "@/redux/profile/profileReducer";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 
 export function cn(...inputs: ClassValue[]) {
   return (clsx(inputs))
@@ -19,6 +20,7 @@ export function NameAbreviation(lastName: string, firstName: string){
 
 export const signIn = async (data: any, dispatch: any ,router: any) => {
   try {
+    dispatch(setLoadingTrue());
     const { email, password } = data;
 
     const userCredential = await signInWithEmailAndPassword(
@@ -53,6 +55,8 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
   } catch (error: any) {
     console.error("Error signing in:", error.message);
     alert(error.message);
+  } finally {
+    dispatch(setLoadingFalse());
   }
 };
 

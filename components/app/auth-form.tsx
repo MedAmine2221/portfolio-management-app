@@ -7,9 +7,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from "react";
 import loginSchema from "@/schema/auth";
 import { useRouter } from "next/navigation";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from "@/lib/utils";
+import { RootState } from "@/redux/store";
 export default function AuthForm() {
+  const loading = useSelector((item: RootState)=> item?.loading?.loading);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema())
   });
@@ -17,10 +19,14 @@ export default function AuthForm() {
   const router = useRouter();
   const dispatch = useDispatch();
   const submit = (data: any) => {
-    signIn({
-      email: data.email,
-      password: data.password
-    },dispatch, router)  
+    try{
+      signIn({
+        email: data.email,
+        password: data.password
+      },dispatch, router)  
+    } catch(error){
+      console.error(error);
+    }
   };
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-6">
@@ -72,11 +78,12 @@ export default function AuthForm() {
           />
         </div>
       </div>
-      <Button 
+      <Button
+        disabled={loading}
         type="submit" 
         className="w-full text-base bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold py-6 hover:from-cyan-600 hover:to-purple-700 transition-all"
       >
-        Sign In
+        {loading ? "SigningIn..." : "Sign In"}
       </Button>
     </form>
   );
