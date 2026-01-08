@@ -20,11 +20,14 @@ import { FiFacebook, FiGithub, FiInstagram, FiLinkedin, FiLogOut } from "react-i
 import { useRouter } from "next/navigation";
 import NavMenu from "./app/nav-menu";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { clearProfile } from "@/redux/profile/profileReducer";
+import { removeToken } from "@/lib/cookies-management";
 
 export const Navbar = () => {
-  const profileUid = useSelector((item: RootState)=> item?.profile?.items);  
+  const profile = useSelector((item: RootState)=> item?.profile?.items);
+  const dispatch = useDispatch();  
   const router = useRouter();
   const [search, setSearch] = useState("");
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -55,11 +58,14 @@ export const Navbar = () => {
       onKeyDown={handleKeyDown}
     />
   );
-  const logout = async (uid: any) => {
+  const logout = async () => {
     await fetch("/api/admin-verify", {
       method: "POST",
-      body: JSON.stringify({ uid }),
+      body: JSON.stringify({ uid: profile?.uid }),
     });
+    dispatch(clearProfile());
+    await removeToken();
+    router.replace("/auth");
   }
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
@@ -99,7 +105,7 @@ export const Navbar = () => {
             isExternal
             as={Link}
             className="text-sm text-red-700 bg-red-100 border border-red-200 font-normal"
-            onClick={()=>router.replace("/auth")}
+            onPress={logout}
             startContent={<FiLogOut size={20} color="var(--color-red-700)" />}
             variant="flat"
           >

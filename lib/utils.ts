@@ -1,10 +1,9 @@
-"use client";
+"use client";;
 import { auth } from "@/config/firebase";
 import { clsx, type ClassValue } from "clsx";
 import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { saveToken } from "./cookies-management";
 import { setProfile } from "@/redux/profile/profileReducer";
-import { Dispatch } from "@reduxjs/toolkit";
 
 export function cn(...inputs: ClassValue[]) {
   return (clsx(inputs))
@@ -29,8 +28,10 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
     );
 
     const user = userCredential.user;
-    const token = await user.getIdToken();
-    await saveToken(token);
+    console.log(user);
+    
+    const token = user?.accessToken;
+    await saveToken({ token });
 
     if (!user.emailVerified) {
       await sendEmailVerification(user);
