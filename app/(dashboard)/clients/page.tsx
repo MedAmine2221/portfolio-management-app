@@ -2,7 +2,7 @@ import AppTables from "@/components/table";
 import { adminDb } from "@/config/firebase-admin.init";
 import { AppUser } from "@/types";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export default async function ClientList() {
 
   const snapshot = await adminDb.collection("contact").get();
   const users = snapshot.docs.map((doc) => {

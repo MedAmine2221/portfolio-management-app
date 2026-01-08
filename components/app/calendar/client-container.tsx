@@ -14,13 +14,12 @@ export async function ClientContainer({ view }: IProps) {
 
   const eventsFromContacts: IEvent[] = snapshot.docs.map((doc, index) => {
     const data = doc.data();
-
     return {
       id: index,
       title: data.object,
       description: data.message,
-      startDate: data.appointment,
-      endDate: data.appointment,
+      startDate: data.startDate,
+      endDate: data.endDate,
       color: "blue",
       user: {
         id: doc.id,

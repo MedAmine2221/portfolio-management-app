@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { Providers } from "./providers";
+import { ReduxProviders } from "./redux-provider";
 
 export const metadata: Metadata = {
   title: {
@@ -25,13 +26,15 @@ export default function RootLayout({
       <body
         cz-shortcut-listen="true"
       >
-        <Providers>
-          <div className="relative flex flex-col">
-            <main>
-              {children}
-            </main>
-          </div>
-        </Providers>
+        <ReduxProviders>
+          <Providers>
+            <div className="relative flex flex-col">
+              <main>
+                {children}
+              </main>
+            </div>
+          </Providers>
+        </ReduxProviders>
       </body>
     </html>
   );

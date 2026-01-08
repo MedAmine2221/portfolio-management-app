@@ -7,14 +7,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from "react";
 import loginSchema from "@/schema/auth";
 import { useRouter } from "next/navigation";
+import { useDispatch } from 'react-redux';
+import { signIn } from "@/lib/utils";
 export default function AuthForm() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema())
   });
   const[isPassword, setIsPassword]=useState(true);
   const router = useRouter();
+  const dispatch = useDispatch();
+  const submit = (data: any) => {
+    signIn({
+      email: data.email,
+      password: data.password
+    },dispatch, router)  
+  };
   return (
-    <form onSubmit={handleSubmit((data) => router.push("/calendar/week-view"))} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <label className={`${!!errors["email"] ? "text-red-300":"text-black"} font-medium mb-2`}>Email</label>
         <div className="relative">

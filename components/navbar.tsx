@@ -20,8 +20,11 @@ import { FiFacebook, FiGithub, FiInstagram, FiLinkedin, FiLogOut } from "react-i
 import { useRouter } from "next/navigation";
 import NavMenu from "./app/nav-menu";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export const Navbar = () => {
+  const profileUid = useSelector((item: RootState)=> item?.profile?.items);  
   const router = useRouter();
   const [search, setSearch] = useState("");
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -52,6 +55,12 @@ export const Navbar = () => {
       onKeyDown={handleKeyDown}
     />
   );
+  const logout = async (uid: any) => {
+    await fetch("/api/admin-verify", {
+      method: "POST",
+      body: JSON.stringify({ uid }),
+    });
+  }
   return (
     <HeroUINavbar maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
