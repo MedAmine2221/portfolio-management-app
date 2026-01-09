@@ -1,271 +1,86 @@
 "use client";;
-import { AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { format, parseISO } from "date-fns";
+import { Calendar, Clock, User } from "lucide-react";
 
-import { useDisclosure } from "@/hooks/use-disclosure";
+import { Button as HerouiButton } from "@heroui/button";
 
-import { Input } from "@/components/shadcnUI/ui/input";
-import { Button } from "@/components/shadcnUI/ui/button";
-import { Textarea } from "@/components/shadcnUI/ui/textarea";
-import { TimeInput } from "@/components/shadcnUI/ui/time-input";
-import { SingleDayPicker } from "@/components/shadcnUI/ui/single-day-picker";
-import { FormField, FormLabel, FormItem, FormControl, FormMessage } from "@/components/shadcnUI/ui/form";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/shadcnUI/ui/select";
-import { Dialog, DialogHeader, DialogClose, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogFooter } from "@/components/shadcnUI/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shadcnUI/ui/dialog";
 
-import type { TimeValue } from "react-aria-components";
+import { Input } from "@heroui/input";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { eventSchema } from "@/schema/calendar";
+import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { Select, SelectItem } from "@heroui/react";
 
 interface IProps {
   children: React.ReactNode;
-  startDate?: Date;
-  startTime?: { hour: number; minute: number };
 }
 
-export function AddEventDialog({ children, startDate, startTime }: IProps) {
-
-  const { isOpen, onClose, onToggle } = useDisclosure();
-
+export function AddEventDialog({ children }: IProps) {
+  const clientsList = useSelector((item: RootState)=> item.clients.clients);  
+  const [start, setStart] = useState(new Date().toISOString());
+  const [end, setEnd] = useState(new Date().toISOString());
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(eventSchema),
+  });
   return (
-    <Dialog open={isOpen} onOpenChange={onToggle}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add New Event</DialogTitle>
-          <DialogDescription>
-            <AlertTriangle className="mr-1 inline-block size-4 text-yellow-500" />
-            This form is for demonstration purposes only and will not actually create an event. In a real application, submit the form to the backend API to
-            save the event.
-          </DialogDescription>
-        </DialogHeader>
-
-          <form id="event-form" 
-          // onSubmit={form.handleSubmit(onSubmit)} 
-          className="grid gap-4 py-4">
-            <FormField
-              // control={form.control}
-              name="user"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Responsible</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {/* {users.map(user => (
-                          <SelectItem key={user.id} value={user.id} className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <Avatar key={user.id} className="size-6">
-                                <AvatarImage src={user.picturePath ?? undefined} alt={user.name} />
-                                <AvatarFallback className="text-xxs">{user.name[0]}</AvatarFallback>
-                              </Avatar>
-
-                              <p className="truncate">{user.name}</p>
-                            </div>
-                          </SelectItem>
-                        ))} */}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              // control={form.control}
-              name="title"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel htmlFor="title">Title</FormLabel>
-
-                  <FormControl>
-                    <Input id="title" placeholder="Enter a title" data-invalid={fieldState.invalid} {...field} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex items-start gap-2">
-              <FormField
-                // control={form.control}
-                name="startDate"
-                render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel htmlFor="startDate">Start Date</FormLabel>
-
-                    <FormControl>
-                      <SingleDayPicker
-                        id="startDate"
-                        value={field.value}
-                        onSelect={date => field.onChange(date as Date)}
-                        placeholder="Select a date"
-                        data-invalid={fieldState.invalid}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                // control={form.control}
-                name="startTime"
-                render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Start Time</FormLabel>
-
-                    <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="flex items-start gap-2">
-              <FormField
-                // control={form.control}
-                name="endDate"
-                render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <SingleDayPicker
-                        value={field.value}
-                        onSelect={date => field.onChange(date as Date)}
-                        placeholder="Select a date"
-                        data-invalid={fieldState.invalid}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                // control={form.control}
-                name="endTime"
-                render={({ field, fieldState }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>End Time</FormLabel>
-
-                    <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              // control={form.control}
-              name="color"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        <SelectItem value="blue">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-blue-600" />
-                            Blue
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="green">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-green-600" />
-                            Green
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="red">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-red-600" />
-                            Red
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="yellow">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-yellow-600" />
-                            Yellow
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="purple">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-purple-600" />
-                            Purple
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="orange">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-orange-600" />
-                            Orange
-                          </div>
-                        </SelectItem>
-
-                        <SelectItem value="gray">
-                          <div className="flex items-center gap-2">
-                            <div className="size-3.5 rounded-full bg-neutral-600" />
-                            Gray
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              // control={form.control}
-              name="description"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-
-                  <FormControl>
-                    <Textarea {...field} value={field.value} data-invalid={fieldState.invalid} />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        {/* </Form> */}
-
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="outline">
-              Cancel
-            </Button>
-          </DialogClose>
-
-          <Button form="event-form" type="submit">
-            Create Event
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog>
+        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle> Add New Event </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <form onSubmit={handleSubmit(()=>alert("hiiiiii"))}>
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-1 font-medium text-sm">
+                  <User className="size-4" /> Client
+                </label>
+                <Select className="max-w-full mb-2" label="Select a client" size={"sm"}>
+                  {clientsList.map((client) => (
+                    <SelectItem key={client?.id}>{client?.firstName + " " + client?.lastName}</SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-1 font-medium text-sm">
+                  <Calendar className="size-4" /> Start Date
+                </label>
+                <Input
+                  {...register("startDate")}
+                  isInvalid={!!errors["startDate"]}
+                  errorMessage={errors["startDate"]?.message}
+                  type="datetime-local"
+                  value={format(parseISO(start), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setStart(new Date(e.target.value).toISOString())}
+                />
+              </div>
+    
+              {/* End Date */}
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-1 font-medium text-sm">
+                  <Clock className="size-4" /> End Date
+                </label>
+                <Input
+                  {...register("endDate")}
+                  isInvalid={!!errors["endDate"]}
+                  errorMessage={errors["endDate"]?.message}
+                  type="datetime-local"
+                  value={format(parseISO(end), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setEnd(new Date(e.target.value).toISOString())}
+                />
+              </div>
+              <DialogFooter className="mt-4 flex justify-end gap-2">
+                <HerouiButton type="submit">Save</HerouiButton>
+              </DialogFooter>
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

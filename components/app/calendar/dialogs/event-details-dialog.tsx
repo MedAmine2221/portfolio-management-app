@@ -28,10 +28,6 @@ export function EventDetailsDialog({ event, children }: IProps) {
   const [end, setEnd] = useState(event.endDate);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(eventSchema),
-    //   defaultValues: {
-    //     startDate: parseISO(event.startDate),
-    //     endDate: parseISO(event.endDate),
-    // },
   });
   return (
     <>
