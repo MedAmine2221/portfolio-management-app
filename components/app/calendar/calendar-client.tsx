@@ -8,9 +8,7 @@ import { CalendarAgendaView } from "./agenda-view/calendar-agenda-view";
 import { Props } from "@/types/interfaces";
 
 
-export function CalendarClient({ view, events }: Props) {
-  console.log(events);
-  
+export function CalendarClient({ view, events }: Props) {  
   return (
     <div className="overflow-hidden rounded-xl border shadow-xl border-default-200">
       <CalendarHeader view={view} events={events} />

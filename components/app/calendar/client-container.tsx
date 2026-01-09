@@ -1,33 +1,15 @@
-// app/calendar/ClientContainer.tsx (SERVER)
-import { adminDb } from "@/config/firebase-admin.init";
+"use client";
 import { CalendarClient } from "./calendar-client";
 import { TCalendarView } from "@/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 import { IEvent } from "@/types/interfaces";
 
 interface IProps {
   view: TCalendarView;
 }
 
-export async function ClientContainer({ view }: IProps) {
-
-  const snapshot = await adminDb.collection("contact").get();
-
-  const eventsFromContacts: IEvent[] = snapshot.docs.map((doc, index) => {
-    const data = doc.data();
-    return {
-      id: index,
-      title: data.object,
-      description: data.message,
-      startDate: data.startDate,
-      endDate: data.endDate,
-      color: "blue",
-      user: {
-        id: doc.id,
-        name: `${data.lastName} ${data.firstName}`,
-        picturePath: null,
-      },
-    };
-  });
-
-  return <CalendarClient view={view} events={eventsFromContacts} />;
+export function ClientContainer({ view }: IProps) {
+  const event: IEvent[] = useSelector((item: RootState)=>item.calendar.calendar)  
+  return <CalendarClient view={view} events={event} />;
 }

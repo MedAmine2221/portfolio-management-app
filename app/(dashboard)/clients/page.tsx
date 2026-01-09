@@ -1,19 +1,11 @@
+"use client";
 import AppTables from "@/components/table";
-import { adminDb } from "@/config/firebase-admin.init";
-import { AppUser } from "@/types";
+import { RootState } from "@/redux/store";
+import { useSelector } from "react-redux";
 
-export default async function ClientList() {
-
-  const snapshot = await adminDb.collection("contact").get();
-  const users = snapshot.docs.map((doc) => {
-    const data = doc.data() as Omit<AppUser, 'id'>;
-    return {
-      id: doc.id,
-      ...data,
-    };
-  }) as AppUser[];
+export default function ClientList() {
+  const users = useSelector((item: RootState)=> item.clients.clients);
   return (
-
     <div className="p-6 m-4">
       <AppTables data={users} />
     </div>

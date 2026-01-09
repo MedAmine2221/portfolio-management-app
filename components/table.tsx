@@ -201,8 +201,6 @@ export default function AppTables({ data }: { data: AppUser[] }) {
   }, [visibleColumns]);
 
   /* ================= RENDER ================= */
-console.log(data);
-
   return (
     <Table
       aria-label="Users table"

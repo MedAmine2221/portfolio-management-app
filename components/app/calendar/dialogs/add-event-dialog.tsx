@@ -2,14 +2,12 @@
 import { AlertTriangle } from "lucide-react";
 
 import { useDisclosure } from "@/hooks/use-disclosure";
-import { useCalendar } from "@/contexts/calendar-context";
 
 import { Input } from "@/components/shadcnUI/ui/input";
 import { Button } from "@/components/shadcnUI/ui/button";
 import { Textarea } from "@/components/shadcnUI/ui/textarea";
 import { TimeInput } from "@/components/shadcnUI/ui/time-input";
 import { SingleDayPicker } from "@/components/shadcnUI/ui/single-day-picker";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/shadcnUI/ui/avatar";
 import { FormField, FormLabel, FormItem, FormControl, FormMessage } from "@/components/shadcnUI/ui/form";
 import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/shadcnUI/ui/select";
 import { Dialog, DialogHeader, DialogClose, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogFooter } from "@/components/shadcnUI/ui/dialog";
@@ -23,7 +21,6 @@ interface IProps {
 }
 
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
-  const { users } = useCalendar();
 
   const { isOpen, onClose, onToggle } = useDisclosure();
 
@@ -57,7 +54,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                       </SelectTrigger>
 
                       <SelectContent>
-                        {users.map(user => (
+                        {/* {users.map(user => (
                           <SelectItem key={user.id} value={user.id} className="flex-1">
                             <div className="flex items-center gap-2">
                               <Avatar key={user.id} className="size-6">
@@ -68,7 +65,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                               <p className="truncate">{user.name}</p>
                             </div>
                           </SelectItem>
-                        ))}
+                        ))} */}
                       </SelectContent>
                     </Select>
                   </FormControl>

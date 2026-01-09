@@ -1,10 +1,11 @@
-"use client";;
 import { auth } from "@/config/firebase";
 import { clsx, type ClassValue } from "clsx";
 import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
-import { saveToken } from "./cookies-management";
+import { getCalendar, getClients, saveToken } from "./server-functions";
 import { setProfile } from "@/redux/profile/profileReducer";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { setCalendar } from "@/redux/calendar/calendarReducer";
+import { setClients } from "@/redux/clients/clientReducer";
 
 export function cn(...inputs: ClassValue[]) {
   return (clsx(inputs))
@@ -30,7 +31,6 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
     );
 
     const user = userCredential.user;
-    console.log(user);
     
     const token = user?.accessToken;
     await saveToken({ token });
@@ -43,6 +43,10 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
         if (user.emailVerified) {          
           clearInterval(interval);
           dispatch(setProfile({uid: user.uid }))
+          const events = await getCalendar();
+          const users = await getClients();       
+          dispatch(setCalendar(events))
+          dispatch(setClients(users))
           router.replace("/calendar/week-view");
         }
       }, 5000);

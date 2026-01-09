@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import profileReducer from "./profile/profileReducer";
 import loadingReducer from "./loadingReducer";
+import calendarReducer from "./calendar/calendarReducer";
+import clientReducer from "./clients/clientReducer";
 
 export const store = configureStore({    
     reducer: {
         profile: profileReducer,
+        calendar: calendarReducer,
+        clients: clientReducer,
         loading: loadingReducer,
     }
 })

@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -23,8 +23,10 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearProfile } from "@/redux/profile/profileReducer";
-import { removeToken } from "@/lib/cookies-management";
+import { removeToken } from "@/lib/server-functions";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { clearClients } from "@/redux/clients/clientReducer";
+import { clearCalendar } from "@/redux/calendar/calendarReducer";
 
 export const Navbar = () => {
   const profile = useSelector((item: RootState)=> item?.profile?.items);
@@ -68,7 +70,8 @@ export const Navbar = () => {
         body: JSON.stringify({ uid: profile?.uid }),
       });
       dispatch(clearProfile());
-      await removeToken();
+      dispatch(clearClients());
+      dispatch(clearCalendar());
       router.replace("/auth");
     } catch (error) {
      console.error(error);
