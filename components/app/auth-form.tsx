@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";

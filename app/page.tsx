@@ -23,8 +23,8 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="flex justify-center items-center">
-      <Image src={"/loading.gif"} width={500} height={500} alt="loading" />
+    <div className="grid place-items-center min-h-screen">
+      <Image src="/loading.gif" width={500} height={500} alt="loading" />
     </div>
   )
 }

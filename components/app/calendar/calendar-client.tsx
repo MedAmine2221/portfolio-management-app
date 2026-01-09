@@ -1,5 +1,4 @@
-// app/calendar/calendar-client.tsx
-"use client";;
+"use client";
 import { CalendarHeader } from "./header/calendar-header";
 import { DndProviderWrapper } from "./dnd/dnd-provider";
 import { CalendarMonthView } from "./month-view/calendar-month-view";
@@ -16,7 +15,6 @@ export function CalendarClient({ view, events }: Props) {
       <DndProviderWrapper>
         {view === "month" && (
           <CalendarMonthView
-            // singleDayEvents={events}
             Events={events}
           />
         )}

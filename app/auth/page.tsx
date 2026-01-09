@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import { FiFacebook, FiLinkedin, FiInstagram } from "react-icons/fi";
 import AuthForm from "@/components/app/auth-form";
 import Image from "next/image";
