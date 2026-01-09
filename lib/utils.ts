@@ -40,12 +40,12 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
       alert("Verify your email please.");
       const interval = setInterval(async () => {
         await user.reload();
-        if (user.emailVerified) {
+        if (user.emailVerified) {          
           clearInterval(interval);
           dispatch(setProfile({uid: user.uid }))
           router.replace("/calendar/week-view");
         }
-      }, 60000);
+      }, 5000);
 
     } else {
       dispatch(setProfile({uid: user.uid }))

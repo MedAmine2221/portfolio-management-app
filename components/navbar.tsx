@@ -63,7 +63,7 @@ export const Navbar = () => {
   const logout = async () => {
     try {
       dispatch(setLoadingTrue());
-      await fetch("/api/admin-verify", {
+      await fetch("/api/logout", {
         method: "POST",
         body: JSON.stringify({ uid: profile?.uid }),
       });
