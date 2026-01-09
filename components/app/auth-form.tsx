@@ -4,20 +4,51 @@ import { Input } from "@heroui/input";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import loginSchema from "@/schema/auth";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
+import { Checkbox, CheckboxGroup } from "@heroui/react";
+import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 export default function AuthForm() {
   const loading = useSelector((item: RootState)=> item?.loading?.loading);
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(loginSchema())
-  });
-  const[isPassword, setIsPassword]=useState(true);
-  const router = useRouter();
+  const auth = useSelector((item: RootState)=> item?.auth.auth);
   const dispatch = useDispatch();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    resolver: yupResolver(loginSchema()),
+    defaultValues:{
+      email: auth.email,
+      password: auth.password,
+    }
+  });  
+  const email = useMemo(()=>{
+    return watch("email");
+  },[
+    watch("email")
+  ])
+  const password = useMemo(()=>{
+    return watch("password");
+  },[
+    watch("password")
+  ])
+  const[isPassword, setIsPassword] = useState(true);
+  const [remembred, setRemembred] = useState(false);
+  useEffect(()=> {
+    console.log(remembred);
+    
+    if(remembred){
+      dispatch(setAuth({
+        email: email,
+        password: password,
+        remember: true
+      }))
+    }else{
+      dispatch(clearAuth())
+    }
+  },[remembred])
+  const router = useRouter();
   const submit = (data: any) => {
     try{
       signIn({
@@ -85,6 +116,11 @@ export default function AuthForm() {
       >
         {loading ? "SigningIn..." : "Sign In"}
       </Button>
+      <CheckboxGroup onChange={(prev)=>{
+        setRemembred(!prev);
+      }} color="primary">
+        <Checkbox isSelected={auth.remember}>Remember Me</Checkbox>
+      </CheckboxGroup>
     </form>
   );
 }

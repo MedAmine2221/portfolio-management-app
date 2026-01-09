@@ -3,6 +3,7 @@ import profileReducer from "./profile/profileReducer";
 import loadingReducer from "./loadingReducer";
 import calendarReducer from "./calendar/calendarReducer";
 import clientReducer from "./clients/clientReducer";
+import authReducer from "./auth/authReducer";
 
 export const store = configureStore({    
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         calendar: calendarReducer,
         clients: clientReducer,
         loading: loadingReducer,
+        auth: authReducer,
     }
 })
 export type RootState = ReturnType<typeof store.getState>;
