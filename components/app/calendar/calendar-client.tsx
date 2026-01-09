@@ -16,22 +16,20 @@ export function CalendarClient({ view, events }: Props) {
       <DndProviderWrapper>
         {view === "month" && (
           <CalendarMonthView
-            singleDayEvents={events}
-            multiDayEvents={events}
+            // singleDayEvents={events}
+            Events={events}
           />
         )}
 
         {view === "week" && (
           <CalendarWeekView
-            singleDayEvents={events}
-            multiDayEvents={events}
+            Events={events}
           />
         )}
 
         {view === "agenda" && (
           <CalendarAgendaView
-            singleDayEvents={events}
-            multiDayEvents={events}
+            Events={events}
           />
         )}
       </DndProviderWrapper>

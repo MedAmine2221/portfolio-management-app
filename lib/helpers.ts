@@ -193,7 +193,7 @@ export function getCalendarCells(selectedDate: Date): ICalendarCell[] {
   return [...prevMonthCells, ...currentMonthCells, ...nextMonthCells];
 }
 
-export function calculateMonthEventPositions(multiDayEvents: IEvent[], singleDayEvents: IEvent[], selectedDate: Date) {
+export function calculateMonthEventPositions(multiDayEvents: IEvent[], selectedDate: Date) {
   const monthStart = startOfMonth(selectedDate);
   const monthEnd = endOfMonth(selectedDate);
 
@@ -210,7 +210,6 @@ export function calculateMonthEventPositions(multiDayEvents: IEvent[], singleDay
       const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
       return bDuration - aDuration || parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
     }),
-    ...singleDayEvents.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime()),
   ];
 
   sortedEvents.forEach(event => {

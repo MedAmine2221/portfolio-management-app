@@ -44,8 +44,7 @@ export interface DroppableTimeBlockProps {
 }
 
 export interface IProps {
-  singleDayEvents: IEvent[];
-  multiDayEvents: IEvent[];
+  Events: IEvent[];
 }
 export interface DayCellProps {
   cell: ICalendarCell;

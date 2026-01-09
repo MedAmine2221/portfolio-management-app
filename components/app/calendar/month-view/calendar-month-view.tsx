@@ -11,17 +11,16 @@ import { DayCell } from "./day-cell";
 
 const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export function CalendarMonthView({ singleDayEvents, multiDayEvents }: IProps) {
+export function CalendarMonthView({ Events }: IProps) {
   const { selectedDate } = useCalendar();
-  console.log("singleDayEvents ",singleDayEvents, " multiDayEvents ",multiDayEvents);
 
-  const allEvents = [...multiDayEvents, ...singleDayEvents];
+  const allEvents = [...Events];
 
   const cells = useMemo(() => getCalendarCells(selectedDate), [selectedDate]);
 
   const eventPositions = useMemo(
-    () => calculateMonthEventPositions(multiDayEvents, singleDayEvents, selectedDate),
-    [multiDayEvents, singleDayEvents, selectedDate]
+    () => calculateMonthEventPositions(Events, selectedDate),
+    [Events, selectedDate]
   );
 
   return (

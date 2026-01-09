@@ -6,33 +6,14 @@ import { useCalendar } from "@/contexts/calendar-context";
 
 import { ScrollArea } from "@/components/shadcnUI/ui/scroll-area";
 
-import type { IEvent } from "@/types/interfaces";
+import type { IEvent, IProps } from "@/types/interfaces";
 import { AgendaDayGroup } from "./agenda-day-group";
-
-interface IProps {
-  singleDayEvents: IEvent[];
-  multiDayEvents: IEvent[];
-}
-
-export function CalendarAgendaView({ singleDayEvents, multiDayEvents }: IProps) {
+export function CalendarAgendaView({ Events }: IProps) {
   const { selectedDate } = useCalendar();
   const eventsByDay = useMemo(() => {
-    const allDates = new Map<string, { date: Date; events: IEvent[]; multiDayEvents: IEvent[] }>();
+    const allDates = new Map<string, { date: Date; events: IEvent[]; Events: IEvent[] }>();
 
-    singleDayEvents.forEach(event => {
-      const eventDate = parseISO(event.startDate);
-      if (!isSameMonth(eventDate, selectedDate)) return;
-
-      const dateKey = format(eventDate, "yyyy-MM-dd");
-
-      if (!allDates.has(dateKey)) {
-        allDates.set(dateKey, { date: startOfDay(eventDate), events: [], multiDayEvents: [] });
-      }
-
-      allDates.get(dateKey)?.events.push(event);
-    });
-
-    multiDayEvents.forEach(event => {
+    Events.forEach(event => {
       const eventStart = parseISO(event.startDate);
       const eventEnd = parseISO(event.endDate);
 
@@ -44,26 +25,26 @@ export function CalendarAgendaView({ singleDayEvents, multiDayEvents }: IProps) 
           const dateKey = format(currentDate, "yyyy-MM-dd");
 
           if (!allDates.has(dateKey)) {
-            allDates.set(dateKey, { date: new Date(currentDate), events: [], multiDayEvents: [] });
+            allDates.set(dateKey, { date: new Date(currentDate), events: [], Events: [] });
           }
 
-          allDates.get(dateKey)?.multiDayEvents.push(event);
+          allDates.get(dateKey)?.Events.push(event);
         }
         currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
       }
     });
 
     return Array.from(allDates.values()).sort((a, b) => a.date.getTime() - b.date.getTime());
-  }, [singleDayEvents, multiDayEvents, selectedDate]);
+  }, [ Events, selectedDate]);
 
-  const hasAnyEvents = singleDayEvents.length > 0 || multiDayEvents.length > 0;
+  const hasAnyEvents = Events.length > 0;
 
   return (
     <div className="h-[800px]">
       <ScrollArea className="h-full" type="always">
         <div className="space-y-6 p-4">
           {eventsByDay.map(dayGroup => (
-            <AgendaDayGroup key={format(dayGroup.date, "yyyy-MM-dd")} date={dayGroup.date} events={dayGroup.events} multiDayEvents={dayGroup.multiDayEvents} />
+            <AgendaDayGroup key={format(dayGroup.date, "yyyy-MM-dd")} date={dayGroup.date} events={dayGroup.events} multiDayEvents={dayGroup.Events} />
           ))}
 
           {!hasAnyEvents && (

@@ -15,12 +15,10 @@ import { groupEvents, getEventBlockStyle, getVisibleHours } from "@/lib/helpers"
 
 import type { IProps } from "@/types/interfaces";
 
-export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
-  console.log("singleDayEvents ",singleDayEvents, " multiDayEvents ",multiDayEvents);
-  
+export function CalendarWeekView({ Events }: IProps) {  
   const { selectedDate, visibleHours } = useCalendar();
 
-  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
+  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, Events);
 
   const weekStart = startOfWeek(selectedDate);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -34,7 +32,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
 
       <div className="hidden flex-col sm:flex">
         <div>
-          <WeekViewMultiDayEventsRow selectedDate={selectedDate} multiDayEvents={multiDayEvents} />
+          <WeekViewMultiDayEventsRow selectedDate={selectedDate} multiDayEvents={Events} />
 
           {/* Week header */}
           <div className="relative z-20 flex border-b">
@@ -66,7 +64,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
             <div className="relative flex-1 border-l">
               <div className="grid grid-cols-7 divide-x">
                 {weekDays.map((day, dayIndex) => {
-                  const dayEvents = singleDayEvents.filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day));
+                  const dayEvents = Events.filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day));
                   const groupedEvents = groupEvents(dayEvents);
 
                   return (
