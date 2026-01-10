@@ -1,7 +1,6 @@
-"use server";
+"use server";;
 import { adminDb } from "@/config/firebase-admin.init";
 import { AppUser } from "@/types";
-import { IEvent } from "@/types/interfaces";
 import { cookies } from "next/headers";
 
 export const saveToken = async ({token}:any) =>{
@@ -25,34 +24,43 @@ export const removeToken = async () => {
   (await cookieStore).delete('token');
 }
 
+export const getCalendar = async () => {
+  const contactsSnapshot = await adminDb.collection("contact").get();
 
-export const getCalendar = async (): Promise<IEvent[]> => {
-  const snapshot = await adminDb.collection("contact").get();
+  const allEvents: any[] = [];
 
-  const eventsFromContacts: IEvent[] = snapshot.docs.map((doc, index) => {
-    const data = doc.data();
-    const start = new Date(data.startDate);
-    start.setHours(start.getHours() - 1);
-    const end = new Date(data.endDate);
-    end.setHours(end.getHours() - 1);
+  for (const contactDoc of contactsSnapshot.docs) {
+    const contactData = contactDoc.data();
+    const eventsSnapshot = await adminDb
+      .collection("contact")
+      .doc(contactDoc.id)
+      .collection("events")
+      .get();
+    
+    eventsSnapshot.docs.forEach((eventDoc, index) => {
+      const eventData = eventDoc.data();
 
-    return {
-      id: index,
-      title: data.object,
-      description: data.message,
-      startDate: start.toISOString(),
-      endDate: end.toISOString(),
-      color: "blue",
-      user: {
-        id: doc.id,
-        name: `${data.lastName} ${data.firstName}`,
-        picturePath: null,
-      },
-    };
-  });
-  return eventsFromContacts;
-  
-}
+      allEvents.push({
+        id: eventDoc.id,
+        title: contactData.object,
+        description: contactData.message,
+        startDate: eventData.startDate,
+        endDate: eventData.endDate,
+        progress: "to do",
+        color: "blue",
+
+        user: {
+          id: contactDoc.id,
+          name: `${contactData.lastName} ${contactData.firstName}`,
+          picturePath: null,
+        },
+      });
+    });
+  }
+
+  return allEvents;
+};
+
 
 export const getClients = async (): Promise<AppUser[]> => {
   const snapshot = await adminDb.collection("contact").get();
