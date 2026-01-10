@@ -203,14 +203,15 @@ export function calculateMonthEventPositions(multiDayEvents: IEvent[], selectedD
   eachDayOfInterval({ start: monthStart, end: monthEnd }).forEach(day => {
     occupiedPositions[day.toISOString()] = [false, false, false];
   });
+  const sortedEvents = [...multiDayEvents].sort((a, b) => {
+    const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
+    const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
 
-  const sortedEvents = [
-    ...multiDayEvents.sort((a, b) => {
-      const aDuration = differenceInDays(parseISO(a.endDate), parseISO(a.startDate));
-      const bDuration = differenceInDays(parseISO(b.endDate), parseISO(b.startDate));
-      return bDuration - aDuration || parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime();
-    }),
-  ];
+    return (
+      bDuration - aDuration ||
+      parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime()
+    );
+  });
 
   sortedEvents.forEach(event => {
     const eventStart = parseISO(event.startDate);
