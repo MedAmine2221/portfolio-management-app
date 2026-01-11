@@ -6,6 +6,7 @@ import loadingReducer from "./loadingReducer";
 import calendarReducer from "./calendar/calendarReducer";
 import clientReducer from "./clients/clientReducer";
 import authReducer from "./auth/authReducer";
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 
 const authPersistConfig = {
   key: "auth",
@@ -22,6 +23,13 @@ export const store = configureStore({
     loading: loadingReducer,
     auth: persistedAuthReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these redux-persist action types
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
