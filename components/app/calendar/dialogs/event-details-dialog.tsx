@@ -13,6 +13,8 @@ import { Input } from "@heroui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eventSchema } from "@/schema/calendar";
 import { useForm } from "react-hook-form";
+import { db } from "@/config/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 interface IProps {
   event: IEvent;
@@ -29,6 +31,30 @@ export function EventDetailsDialog({ event, children }: IProps) {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(eventSchema),
   });
+  const onSubmit = async (data: any) => {
+    try {
+      const eventRef = doc(
+        db,
+        "contact",
+        String(event.user.id),
+        "events",
+        String(event.id)
+      );
+
+      await updateDoc(eventRef, {
+        startDate: data.startDate,
+        endDate: data.endDate,
+        updatedAt: new Date().toISOString(),
+      });
+
+      alert("Event updated successfully");
+      setIsEditOpen(false);
+    } catch (error) {
+      console.error(error);
+      alert("Error updating event");
+    }
+  };
+
   return (
     <>
       <Dialog>
@@ -50,7 +76,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 
             {isEditOpen ? 
             (
-              <form onSubmit={handleSubmit(()=>alert("hiiiiii"))}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col gap-1">
                   <label className="flex items-center gap-1 font-medium text-sm">
                     <Calendar className="size-4" /> Start Date

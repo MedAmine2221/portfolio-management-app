@@ -54,12 +54,8 @@ export function AddEventDialog({ children }: IProps) {
         endDate: data.endDate,
         progress: "to do",
         createdAt: new Date().toISOString(),
-      });
-      console.log("selectedClient ",selectedClient);
-      
-      const selectedClientInfo = clientsList.find((item: any)=> item?.id === selectedClient);
-      console.log("selectedClientInfo ",selectedClientInfo);
-      
+      });      
+      const selectedClientInfo = clientsList.find((item: any)=> item?.id === selectedClient);      
       const template = getTemplateMail({data: {
         client: selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
         date: data.startDate,
@@ -71,7 +67,7 @@ export function AddEventDialog({ children }: IProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to: selectedClientInfo?.email, // ici vous pouvez mettre l'email réel du client
+          to: selectedClientInfo?.email,
           subject: selectedClientInfo?.object,
           html: template
         })
