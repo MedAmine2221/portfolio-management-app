@@ -28,22 +28,6 @@ export interface Props {
   events: IEvent[];
 }
 
-export interface DraggableEventProps {
-  event: IEvent;
-  children: React.ReactNode;
-}
-export interface DroppableDayCellProps {
-  cell: ICalendarCell;
-  children: React.ReactNode;
-}
-
-export interface DroppableTimeBlockProps {
-  date: Date;
-  hour: number;
-  minute: number;
-  children: React.ReactNode;
-}
-
 export interface IProps {
   Events: IEvent[];
 }
@@ -56,8 +40,4 @@ export interface DayCellProps {
 export interface CalendarTimeLineProps {
   firstVisibleHour: number;
   lastVisibleHour: number;
-}
-export interface DayViewMultiDayEventsRowProps {
-  selectedDate: Date;
-  multiDayEvents: IEvent[];
 }

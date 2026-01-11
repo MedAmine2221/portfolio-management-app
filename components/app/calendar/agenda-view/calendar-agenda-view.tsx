@@ -8,8 +8,10 @@ import { ScrollArea } from "@/components/shadcnUI/ui/scroll-area";
 
 import type { IEvent, IProps } from "@/types/interfaces";
 import { AgendaDayGroup } from "./agenda-day-group";
+
 export function CalendarAgendaView({ Events }: IProps) {
   const { selectedDate } = useCalendar();
+  
   const eventsByDay = useMemo(() => {
     const allDates = new Map<string, { date: Date; events: IEvent[]; Events: IEvent[] }>();
 
@@ -38,21 +40,24 @@ export function CalendarAgendaView({ Events }: IProps) {
   }, [ Events, selectedDate]);
 
   const hasAnyEvents = Events.length > 0;
+  const hasEventsInMonth = eventsByDay.length > 0;
 
   return (
     <div className="h-[800px]">
       <ScrollArea className="h-full" type="always">
         <div className="space-y-6 p-4">
-          {eventsByDay.map(dayGroup => (
-            <AgendaDayGroup key={format(dayGroup.date, "yyyy-MM-dd")} date={dayGroup.date} events={dayGroup.events} multiDayEvents={dayGroup.Events} />
-          ))}
+          {
+            hasAnyEvents && hasEventsInMonth ? 
+              eventsByDay.map(dayGroup => (
+               <AgendaDayGroup key={format(dayGroup.date, "yyyy-MM-dd")} date={dayGroup.date} events={dayGroup.events} multiDayEvents={dayGroup.Events} />
 
-          {!hasAnyEvents && (
-            <div className="flex flex-col items-center justify-center gap-2 py-20 text-muted-foreground">
-              <CalendarX2 className="size-10" />
-              <p className="text-sm md:text-base">No events scheduled for the selected month</p>
-            </div>
-          )}
+              ))
+            :
+              <div className="flex flex-col items-center justify-center gap-2 py-20 text-muted-foreground">
+                <CalendarX2 className="size-10" />
+                <p className="text-sm md:text-base">No events scheduled for the selected month</p>
+              </div>
+          }
         </div>
       </ScrollArea>
     </div>
