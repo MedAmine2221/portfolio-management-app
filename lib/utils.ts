@@ -53,6 +53,10 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
 
     } else {
       dispatch(setProfile({uid: user.uid }))
+      const events = await getCalendar();
+      const users = await getClients();       
+      dispatch(setCalendar(events))
+      dispatch(setClients(users))
       router.replace("/calendar/week-view");
     }
 

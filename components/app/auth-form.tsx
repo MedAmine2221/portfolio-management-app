@@ -14,7 +14,7 @@ import { Checkbox, CheckboxGroup } from "@heroui/react";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 export default function AuthForm() {
   const loading = useSelector((item: RootState)=> item?.loading?.loading);
-  const auth = useSelector((item: RootState)=> item?.auth.auth);
+  const auth = useSelector((item: RootState)=> item?.auth.auth);  
   const dispatch = useDispatch();
   const { register, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: yupResolver(loginSchema()),
@@ -36,7 +36,7 @@ export default function AuthForm() {
   const[isPassword, setIsPassword] = useState(true);
   const [remembred, setRemembred] = useState(false);
   useEffect(()=> {    
-    if(remembred){
+    if(remembred === true){
       dispatch(setAuth({
         email: email,
         password: password,
@@ -45,14 +45,14 @@ export default function AuthForm() {
     }else{
       dispatch(clearAuth())
     }
-  },[remembred])
+  },[remembred, email, password])
   const router = useRouter();
   const submit = (data: any) => {
     try{
       signIn({
         email: data.email,
         password: data.password
-      },dispatch, router)  
+      },dispatch, router)
     } catch(error){
       console.error(error);
     }
@@ -114,8 +114,8 @@ export default function AuthForm() {
       >
         {loading ? "SigningIn..." : "Sign In"}
       </Button>
-      <CheckboxGroup onChange={(prev)=>{
-        setRemembred(!prev);
+      <CheckboxGroup onChange={()=>{
+        setRemembred(!remembred);
       }} color="primary">
         <Checkbox isSelected={auth.remember}>Remember Me</Checkbox>
       </CheckboxGroup>
