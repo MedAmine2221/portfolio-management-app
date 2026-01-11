@@ -1,8 +1,9 @@
 import "@/styles/globals.css";
-import { Metadata } from "next";
-import { siteConfig } from "@/config/site";
 import { Providers } from "./providers";
 import { ReduxProviders } from "./redux-provider";
+import ChangePathProvider from "./change-path-provider";
+import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: {
@@ -14,7 +15,6 @@ export const metadata: Metadata = {
     icon: "/amine.png",
   },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -28,11 +28,13 @@ export default function RootLayout({
       >
         <ReduxProviders>
           <Providers>
-            <div className="relative flex flex-col">
-              <main>
-                {children}
-              </main>
-            </div>
+            <ChangePathProvider>
+              <div className="relative flex flex-col">
+                <main>
+                  {children}
+                </main>
+              </div>
+            </ChangePathProvider>
           </Providers>
         </ReduxProviders>
       </body>
