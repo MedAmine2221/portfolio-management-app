@@ -17,14 +17,14 @@ import { groupEvents, getEventBlockStyle, getCurrentEvents, getVisibleHours } fr
 
 import type { IProps } from "@/types/interfaces";
 
-export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
-  const { selectedDate, setSelectedDate, users, visibleHours } = useCalendar();
+export function CalendarDayView({ Events }: IProps) {
+  const { selectedDate, setSelectedDate, visibleHours } = useCalendar();
 
-  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
+  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, Events);
 
-  const currentEvents = getCurrentEvents(singleDayEvents);
+  const currentEvents = getCurrentEvents(Events);
 
-  const dayEvents = singleDayEvents.filter(event => {
+  const dayEvents = Events.filter(event => {
     const eventDate = parseISO(event.startDate);
     return (
       eventDate.getDate() === selectedDate.getDate() &&
@@ -39,7 +39,7 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
     <div className="flex">
       <div className="flex flex-1 flex-col">
         <div>
-          <DayViewMultiDayEventsRow selectedDate={selectedDate} multiDayEvents={multiDayEvents} />
+          <DayViewMultiDayEventsRow selectedDate={selectedDate} multiDayEvents={Events} />
 
           {/* Day header */}
           <div className="relative z-20 flex border-b">
@@ -72,13 +72,13 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                       {index !== 0 && <div className="pointer-events-none absolute inset-x-0 top-0 border-b"></div>}
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={0}>
-                        <AddEventDialog startDate={selectedDate} startTime={{ hour, minute: 0 }}>
+                        <AddEventDialog>
                           <div className="absolute inset-x-0 top-0 h-[24px] cursor-pointer transition-colors hover:bg-accent" />
                         </AddEventDialog>
                       </DroppableTimeBlock>
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={15}>
-                        <AddEventDialog startDate={selectedDate} startTime={{ hour, minute: 15 }}>
+                        <AddEventDialog>
                           <div className="absolute inset-x-0 top-[24px] h-[24px] cursor-pointer transition-colors hover:bg-accent" />
                         </AddEventDialog>
                       </DroppableTimeBlock>
@@ -86,13 +86,13 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                       <div className="pointer-events-none absolute inset-x-0 top-1/2 border-b border-dashed"></div>
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={30}>
-                        <AddEventDialog startDate={selectedDate} startTime={{ hour, minute: 30 }}>
+                        <AddEventDialog>
                           <div className="absolute inset-x-0 top-[48px] h-[24px] cursor-pointer transition-colors hover:bg-accent" />
                         </AddEventDialog>
                       </DroppableTimeBlock>
 
                       <DroppableTimeBlock date={selectedDate} hour={hour} minute={45}>
-                        <AddEventDialog startDate={selectedDate} startTime={{ hour, minute: 45 }}>
+                        <AddEventDialog>
                           <div className="absolute inset-x-0 top-[72px] h-[24px] cursor-pointer transition-colors hover:bg-accent" />
                         </AddEventDialog>
                       </DroppableTimeBlock>
@@ -152,19 +152,9 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
             <ScrollArea className="h-[422px] px-4" type="always">
               <div className="space-y-6 pb-4">
                 {currentEvents.map(event => {
-                  const user = users.find(user => user.id === event.user.id);
-
                   return (
                     <div key={event.id} className="space-y-1.5">
                       <p className="line-clamp-2 text-sm font-semibold">{event.title}</p>
-
-                      {user && (
-                        <div className="flex items-center gap-1.5 text-muted-foreground">
-                          <User className="size-3.5" />
-                          <span className="text-sm">{user.name}</span>
-                        </div>
-                      )}
-
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Calendar className="size-3.5" />
                         <span className="text-sm">{format(new Date(), "MMM d, yyyy")}</span>

@@ -15,17 +15,30 @@ import { eventSchema } from "@/schema/calendar";
 import { useForm } from "react-hook-form";
 import { db } from "@/config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { getTemplateMailChangeDate } from "@/lib/utils";
 
 interface IProps {
   event: IEvent;
   children: React.ReactNode;
 }
-
+const months= [
+  "Jan", // 0
+  "Fév", // 1
+  "Mar", // 2
+  "Avr", // 3
+  "Mai", // 4
+  "Jun", // 5
+  "Jul", // 6
+  "Aoû", // 7
+  "Sep", // 8
+  "Oct", // 9
+  "Nov", // 10
+  "Déc"  // 11
+];
 export function EventDetailsDialog({ event, children }: IProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const startDate = parseISO(event.startDate);
   const endDate = parseISO(event.endDate);
-
   const [start, setStart] = useState(event.startDate);
   const [end, setEnd] = useState(event.endDate);
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -33,6 +46,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
   });
   const onSubmit = async (data: any) => {
     try {
+      const ancienne_date = `${new Date(event.startDate).getDay()} - ${new Date(event.startDate).getMonth()} - ${new Date(event.startDate).getFullYear()}`
       const eventRef = doc(
         db,
         "contact",
@@ -44,9 +58,27 @@ export function EventDetailsDialog({ event, children }: IProps) {
       await updateDoc(eventRef, {
         startDate: data.startDate,
         endDate: data.endDate,
+        lienMeet: "https//:www.google.com",
         updatedAt: new Date().toISOString(),
       });
 
+      const template = getTemplateMailChangeDate({data: {
+        client: event.user.name,
+        date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+        startDate: new Date(data.startDate).getHours() + "h:" + new Date(data.startDate).getMinutes()+"min",
+        object: event.title,
+        ancienne_date: ancienne_date,
+        lientMeet: "https//:www.google.com"
+      }});
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: event.user.email,
+          subject: event.title,
+          html: template
+        })
+      });
       alert("Event updated successfully");
       setIsEditOpen(false);
     } catch (error) {

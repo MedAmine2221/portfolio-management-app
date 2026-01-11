@@ -18,6 +18,20 @@ import { getTemplateMail } from "@/lib/utils";
 interface IProps {
   children: React.ReactNode;
 }
+const months= [
+  "Jan", // 0
+  "Fév", // 1
+  "Mar", // 2
+  "Avr", // 3
+  "Mai", // 4
+  "Jun", // 5
+  "Jul", // 6
+  "Aoû", // 7
+  "Sep", // 8
+  "Oct", // 9
+  "Nov", // 10
+  "Déc"  // 11
+];
 export function AddEventDialog({ children }: IProps) {
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
@@ -53,13 +67,14 @@ export function AddEventDialog({ children }: IProps) {
         startDate: data.startDate,
         endDate: data.endDate,
         progress: "to do",
+        lientMeet: "https//:www.google.com",
         createdAt: new Date().toISOString(),
       });      
       const selectedClientInfo = clientsList.find((item: any)=> item?.id === selectedClient);      
       const template = getTemplateMail({data: {
         client: selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
-        date: data.startDate,
-        startDate: data.startDate,
+        date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+        startDate: new Date(data.startDate).getHours() + "h:" + new Date(data.startDate).getMinutes()+"min",
         object: selectedClientInfo?.object,
         lientMeet: "https//:www.google.com"
       }});

@@ -3,6 +3,7 @@ import { TCalendarView, TEventColor } from ".";
 export interface IUser {
   id: string;
   name: string;
+  email: string;
   picturePath: string | null;
 }
 

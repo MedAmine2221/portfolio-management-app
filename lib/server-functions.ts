@@ -52,6 +52,7 @@ export const getCalendar = async () => {
         user: {
           id: contactDoc.id,
           name: `${contactData.lastName} ${contactData.firstName}`,
+          email: contactData.email,
           picturePath: null,
         },
       });

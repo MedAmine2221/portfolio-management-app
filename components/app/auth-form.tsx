@@ -35,9 +35,7 @@ export default function AuthForm() {
   ])
   const[isPassword, setIsPassword] = useState(true);
   const [remembred, setRemembred] = useState(false);
-  useEffect(()=> {
-    console.log(remembred);
-    
+  useEffect(()=> {    
     if(remembred){
       dispatch(setAuth({
         email: email,
