@@ -147,7 +147,7 @@ export function AddEventDialog({ children }: IProps) {
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* Client Select */}
           <div className="flex flex-col gap-1">
-            <label className="flex items-center gap-1 font-medium text-sm">
+            <label htmlFor="client" className="flex items-center gap-1 font-medium text-sm">
               <User className="size-4" /> Client
             </label>
             <Select
