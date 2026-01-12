@@ -23,10 +23,8 @@ export default function ChangePathProvider({
 
       if (data.token) {
         signIn(
-          {
-            email: auth.email,
-            password: auth.password,
-          },
+          auth.email,
+          auth.password,
           dispatch,
           router,
         );
