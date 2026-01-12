@@ -16,7 +16,7 @@ export default function NavMenu({ isMobile }: { isMobile?: boolean }) {
         tabList: "overflow-x-auto scrollbar-hide w-100",
       }}
       selectedKey={pathname}
-      variant="solid"
+      variant="bordered"
       onSelectionChange={(key) => router.push(key as string)}
     >
       {siteConfig.navItems.map((item) => (
@@ -26,11 +26,11 @@ export default function NavMenu({ isMobile }: { isMobile?: boolean }) {
     <Tabs
       aria-label="Navigation"
       selectedKey={pathname}
-      variant="solid"
+      variant="bordered"
       onSelectionChange={(key) => router.push(key as string)}
     >
       {siteConfig.navItems.map((item) => (
-        <Tab className="" key={item.href} title={item.label} />
+        <Tab key={item.href} title={item.label} />
       ))}
     </Tabs>
   );
