@@ -169,7 +169,7 @@ export function AddEventDialog({ children }: IProps) {
 
           {/* Start Date */}
           <div className="flex flex-col gap-1">
-            <label className="flex items-center gap-1 font-medium text-sm">
+            <label htmlFor="startDate" className="flex items-center gap-1 font-medium text-sm">
               <Calendar className="size-4" /> Start Date
             </label>
             <Input
@@ -186,7 +186,7 @@ export function AddEventDialog({ children }: IProps) {
 
           {/* End Date */}
           <div className="flex flex-col gap-1">
-            <label className="flex items-center gap-1 font-medium text-sm">
+            <label htmlFor="endDate" className="flex items-center gap-1 font-medium text-sm">
               <Clock className="size-4" /> End Date
             </label>
             <Input

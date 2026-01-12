@@ -57,6 +57,7 @@ export default function AuthForm() {
       <div className="flex flex-col gap-1">
         <label
           className={`${!!errors["email"] ? "text-red-300" : "text-black"} font-medium mb-2`}
+          htmlFor="email"
         >
           Email
         </label>
@@ -84,6 +85,7 @@ export default function AuthForm() {
       <div className="flex flex-col gap-1">
         <label
           className={`${!!errors["password"] ? "text-red-300" : "text-black"} font-medium mb-2`}
+          htmlFor="password"
         >
           Password
         </label>
