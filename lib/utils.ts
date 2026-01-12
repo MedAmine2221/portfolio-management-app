@@ -351,7 +351,7 @@ export const getTemplateMail = ({data}: any,) => {
                   <p>📧 Email : amine.lazreg.dev@gmail.com</p>
                   <p>📱 Téléphone : +216 53 73 94 84</p>
                   <p style="margin-top: 15px; font-size: 12px; opacity: 0.8;">
-                      © 2026 - Tous droits réservés
+                      © ${new Date().getFullYear()} - Tous droits réservés
                   </p>
               </div>
           </div>
