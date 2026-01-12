@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
-import { Checkbox, CheckboxGroup } from "@heroui/react";
+import { Checkbox } from "@heroui/react";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 export default function AuthForm() {
   const loading = useSelector((item: RootState)=> item?.loading?.loading);
@@ -35,17 +35,6 @@ export default function AuthForm() {
   ])
   const[isPassword, setIsPassword] = useState(true);
   const [remembred, setRemembred] = useState(false);
-  useEffect(()=> {    
-    if(remembred === true){
-      dispatch(setAuth({
-        email: email,
-        password: password,
-        remember: true
-      }))
-    }else{
-      dispatch(clearAuth())
-    }
-  },[remembred, email, password])
   const router = useRouter();
   const submit = (data: any) => {
     try{
@@ -57,6 +46,8 @@ export default function AuthForm() {
       console.error(error);
     }
   };
+  console.log("auth ",auth);
+  
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
@@ -114,11 +105,23 @@ export default function AuthForm() {
       >
         {loading ? "SigningIn..." : "Sign In"}
       </Button>
-      <CheckboxGroup onChange={()=>{
-        setRemembred(!remembred);
-      }} color="primary">
-        <Checkbox isSelected={auth.remember}>Remember Me</Checkbox>
-      </CheckboxGroup>
+      <Checkbox
+        isSelected={auth.remember}
+        onValueChange={(value) => {
+          if (value) {
+            dispatch(setAuth({
+              email,
+              password,
+              remember: true
+            }))
+          } else {
+            dispatch(clearAuth())
+          }
+        }}
+        color="primary"
+      >
+        Remember Me
+      </Checkbox>
     </form>
   );
 }
