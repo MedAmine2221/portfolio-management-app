@@ -81,7 +81,7 @@ export function AddEventDialog({ children }: IProps) {
         lientMeet: "https//:www.google.com",
         createdAt: new Date().toISOString(),
       });      
-      const selectedClientInfo = clientsList.find((item: any)=> item?.id === selectedClient);      
+      const selectedClientInfo: any = clientsList.find((item: any)=> item?.id === selectedClient);      
       const template = getTemplateMail({data: {
         client: selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
         date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
