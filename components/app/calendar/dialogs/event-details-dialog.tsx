@@ -15,7 +15,7 @@ import { eventSchema } from "@/schema/calendar";
 import { useForm } from "react-hook-form";
 import { db } from "@/config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { getTemplateMailChangeDate } from "@/lib/utils";
+import { getTemplateMail } from "@/lib/utils";
 
 interface IProps {
   event: IEvent;
@@ -35,7 +35,7 @@ const months= [
   "Nov",
   "Déc" 
 ];
-export function EventDetailsDialog({ event, children }: IProps) {
+export function EventDetailsDialog({ event, children }: IProps) {  
   const [isEditOpen, setIsEditOpen] = useState(false);
   const startDate = parseISO(event.startDate);
   const endDate = parseISO(event.endDate);
@@ -46,7 +46,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
   });
   const onSubmit = async (data: any) => {
     try {
-      const ancienne_date = `${new Date(event.startDate).getDay()} - ${new Date(event.startDate).getMonth()} - ${new Date(event.startDate).getFullYear()}`
+      const ancienne_date = `${new Date(event.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`
       const eventRef = doc(
         db,
         "contact",
@@ -62,12 +62,13 @@ export function EventDetailsDialog({ event, children }: IProps) {
         updatedAt: new Date().toISOString(),
       });
 
-      const template = getTemplateMailChangeDate({data: {
+      const template = getTemplateMail({data: {
         client: event.user.name,
         date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
         startDate: new Date(data.startDate).getHours() + "h:" + new Date(data.startDate).getMinutes()+"min",
         object: event.title,
         ancienne_date: ancienne_date,
+        edit: true,
         lientMeet: "https//:www.google.com"
       }});
       await fetch('/api/send-email', {

@@ -4,7 +4,7 @@ import { Input } from "@heroui/input";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import loginSchema from "@/schema/auth";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from 'react-redux';
@@ -34,7 +34,6 @@ export default function AuthForm() {
     watch("password")
   ])
   const[isPassword, setIsPassword] = useState(true);
-  const [remembred, setRemembred] = useState(false);
   const router = useRouter();
   const submit = (data: any) => {
     try{
@@ -45,9 +44,7 @@ export default function AuthForm() {
     } catch(error){
       console.error(error);
     }
-  };
-  console.log("auth ",auth);
-  
+  };  
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
