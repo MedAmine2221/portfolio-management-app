@@ -6,7 +6,6 @@ import { AppUser } from "@/types";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-export const runtime = "nodejs";
 export const saveToken = async ({ token }: any) => {
   (await cookies())?.set("token", token, {
     httpOnly: true,
