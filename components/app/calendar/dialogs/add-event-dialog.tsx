@@ -1,6 +1,5 @@
 "use client";;
 import { useMemo, useState } from "react";
-import { format, parseISO } from "date-fns";
 import { Calendar, Clock, User } from "lucide-react";
 import { Button as HerouiButton } from "@heroui/button";
 import { Input } from "@heroui/input";
@@ -37,7 +36,7 @@ export function AddEventDialog({ children }: IProps) {
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const clientOptions = useMemo(() => {
-    return clientsList.map((item) => ({
+    return clientsList.map((item: any) => ({
       key: String(item.id),
       label: item.firstName + " " + item.lastName,
     }));
