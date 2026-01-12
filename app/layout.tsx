@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body cz-shortcut-listen="true">
+      <body>
         <ReduxProviders>
           <Providers>
             <ChangePathProvider>

@@ -11,7 +11,7 @@ export default function Auth() {
     <div className="w-full flex items-center justify-center p-4">
       <div className="flex flex-col justify-between items-center">
         <p className="text-5xl my-20 font-bold">
-          Mohamed Amine's Portfolio Management
+          Mohamed Amine&apos;s Portfolio Management
         </p>
         <div className="flex flex-row justify-center items-center">
           <div>
