@@ -6,17 +6,6 @@ import { Providers } from "./providers";
 import { ReduxProviders } from "./redux-provider";
 
 import ChangePathProvider from "./change-path-provider";
-
-// export const metadata: Metadata = {
-//   title: {
-//     default: siteConfig.name,
-//     template: `%s - ${siteConfig.name}`,
-//   },
-//   description: siteConfig.description,
-//   icons: {
-//     icon: "/amine.png",
-//   },
-// };
 export default function RootLayout({
   children,
 }: {
