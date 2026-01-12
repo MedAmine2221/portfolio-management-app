@@ -1,8 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import {
-    sendEmailVerification,
-    signInWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { getCalendar, getClients } from "./server-functions";
 
@@ -46,31 +43,12 @@ export const signIn = async (data: any, dispatch: AppDispatch, router: any) => {
 
     const token = user?.accessToken;
     dispatch(setToken({token}));
-    if (!user.emailVerified) {
-      await sendEmailVerification(user);
-      alert("Verify your email please.");
-      const interval = setInterval(async () => {
-        await user.reload();
-        if (user.emailVerified) {
-          clearInterval(interval);
-          dispatch(setProfile({ uid: user.uid }));
-          const events = await getCalendar();
-          const users = await getClients();
-
-          dispatch(setCalendar(events));
-          dispatch(setClients(users));
-          router.replace("/calendar/week-view");
-        }
-      }, 5000);
-    } else {
-      dispatch(setProfile({ uid: user.uid }));
-      const events = await getCalendar();
-      const users = await getClients();
-
-      dispatch(setCalendar(events));
-      dispatch(setClients(users));
+    dispatch(setProfile({ uid: user.uid }));
+    const events = await getCalendar();
+    const users = await getClients();
+    dispatch(setCalendar(events));
+    dispatch(setClients(users));
       router.replace("/calendar/week-view");
-    }
   } catch (error: any) {
     console.error("Error signing in:", error.message);
     alert(error.message);
