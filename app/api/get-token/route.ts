@@ -8,7 +8,6 @@ export async function GET() {
     const token = await getToken();
     return NextResponse.json({ token: token ?? null });
   } catch (err) {
-    console.error('GET /api/get-token error:', err);
     return NextResponse.json({ token: null }, { status: 500 });
   }
 }

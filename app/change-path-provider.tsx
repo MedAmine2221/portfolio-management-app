@@ -6,6 +6,7 @@ import { ReactNode, useEffect } from "react";
 
 import { RootState } from "@/redux/store";
 import { signIn } from "@/lib/utils";
+import { getToken } from "@/lib/server-functions";
 
 export default function ChangePathProvider({
   children,
@@ -18,10 +19,9 @@ export default function ChangePathProvider({
 
   useEffect(() => {
     const checkToken = async () => {
-      const res = await fetch("/api/get-token");
-      const data = await res.json();
-
-      if (data.token) {
+      const res = await getToken();
+      
+      if (res) {
         signIn(
           {
             email: auth.email,
