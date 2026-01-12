@@ -38,7 +38,7 @@ export const Navbar = () => {
 
   const logout = async () => {
     try {
-      updateUserInfo({uid: profile?.uid})
+      await updateUserInfo({uid: profile?.uid})
       dispatch(clearProfile());
       dispatch(clearClients());
       dispatch(clearCalendar());

@@ -86,7 +86,7 @@ export const updateUserInfo = async ({uid}: {uid: string}) => {
     await adminAuth.updateUser(uid, { emailVerified: false });
     await removeToken();
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return { success: true };
   } catch (error: any) {
     return NextResponse.json(
       { error: error?.message || "Server error" },
@@ -115,7 +115,7 @@ export const sendMail = async ({ to, subject, html }: any) => {
       html,
     });
 
-    return NextResponse.json({ success: true });
+    return ({ success: true });
   } catch (err) {
     console.error(err);
 
