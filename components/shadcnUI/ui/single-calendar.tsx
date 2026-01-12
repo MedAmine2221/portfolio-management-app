@@ -1,24 +1,20 @@
-"use client";
-
+"use client";;
 import * as React from "react";
 import { DayPicker } from "react-day-picker";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { buttonVariants } from "./button";
 
 import { cn } from "@/lib/utils";
 
 
-function SingleCalendar({ className, classNames, showOutsideDays = true, selected, ...props }: any) {
+function SingleCalendar({ selected, ...props }: any) {
   const [currentMonth, setCurrentMonth] = React.useState<Date | undefined>(selected instanceof Date ? selected : undefined);
 
   return (
     <DayPicker
       selected={selected}
-      showOutsideDays={showOutsideDays}
       month={currentMonth}
       onMonthChange={setCurrentMonth}
-      className={cn("p-3", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -45,11 +41,6 @@ function SingleCalendar({ className, classNames, showOutsideDays = true, selecte
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ className, ...props }) => <ChevronLeft className={cn("h-4 w-4", className)} {...props} />,
-        IconRight: ({ className, ...props }) => <ChevronRight className={cn("h-4 w-4", className)} {...props} />,
       }}
       {...props}
     />
