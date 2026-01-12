@@ -28,19 +28,18 @@ export default function RootLayout({
       <body>
         <ReduxProviders>
           <Providers>
-              <div className="relative flex min-h-screen flex-col">
-                <main className="flex-1">{children}</main>
-
-                <footer className="w-full flex items-center justify-center py-3">
-                  <div className="flex items-center gap-1 text-current">
-                    <FaCopyright className="text-white" />
-                    <span className="text-default-600 text-sm">
-                      All rights reserved {new Date().getFullYear()}
-                    </span>
-                    <p className="text-primary text-sm">Mohamed Amine LAZREG</p>
-                  </div>
-                </footer>
-              </div>
+            <div className="relative flex min-h-screen flex-col">
+              <main className="flex-1">{children}</main>
+              <footer className="w-full flex items-center justify-center py-3">
+                <div className="flex items-center gap-1 text-current">
+                  <FaCopyright className="text-white" />
+                  <span className="text-default-600 text-sm">
+                    All rights reserved {new Date().getFullYear()}
+                  </span>
+                  <p className="text-primary text-sm">Mohamed Amine LAZREG</p>
+                </div>
+              </footer>
+            </div>
           </Providers>
         </ReduxProviders>
       </body>

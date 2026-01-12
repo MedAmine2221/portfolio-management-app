@@ -14,7 +14,6 @@ export default function Home() {
     useEffect(() => {
       const checkToken = async () => {
         const res = await getToken();
-        
         if (res) {
           signIn(
             {
