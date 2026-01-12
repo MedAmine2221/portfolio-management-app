@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import {
   sendEmailVerification,
   signInWithEmailAndPassword,
+  User,
 } from "firebase/auth";
 
 import { getCalendar, getClients, saveToken } from "./server-functions";
@@ -11,6 +12,7 @@ import { setProfile } from "@/redux/profile/profileReducer";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { setCalendar } from "@/redux/calendar/calendarReducer";
 import { setClients } from "@/redux/clients/clientReducer";
+import { AppDispatch } from "@/redux/store";
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -29,48 +31,86 @@ export function NameAbreviation(lastName: string, firstName: string) {
   return result;
 }
 
-export const signIn = async (data: any, dispatch: any, router: any) => {
+// export const signIn = async (data: any, dispatch: any, router: any) => {
+//   try {
+//     dispatch(setLoadingTrue());
+//     const { email, password } = data;
+
+//     const userCredential = await signInWithEmailAndPassword(
+//       auth,
+//       email,
+//       password,
+//     );
+
+//     const user: any = userCredential.user;
+
+//     const token = user?.accessToken;
+
+//     await saveToken({ token });
+
+//     if (!user.emailVerified) {
+//       await sendEmailVerification(user);
+//       alert("Verify your email please.");
+//       const interval = setInterval(async () => {
+//         await user.reload();
+//         if (user.emailVerified) {
+//           clearInterval(interval);
+//           dispatch(setProfile({ uid: user.uid }));
+//           const events = await getCalendar();
+//           const users = await getClients();
+
+//           dispatch(setCalendar(events));
+//           dispatch(setClients(users));
+//           router.replace("/calendar/week-view");
+//         }
+//       }, 5000);
+//     } else {
+//       dispatch(setProfile({ uid: user.uid }));
+//       const events = await getCalendar();
+//       const users = await getClients();
+
+//       dispatch(setCalendar(events));
+//       dispatch(setClients(users));
+//       router.replace("/calendar/week-view");
+//     }
+//   } catch (error: any) {
+//     console.error("Error signing in:", error.message);
+//     alert(error.message);
+//   } finally {
+//     dispatch(setLoadingFalse());
+//   }
+// };
+
+export const signIn = async (
+  email: string,
+  password: string,
+  dispatch: AppDispatch,
+  router: any
+) => {
   try {
     dispatch(setLoadingTrue());
-    const { email, password } = data;
 
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password,
-    );
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user: User = userCredential.user;
 
-    const user: any = userCredential.user;
-
-    const token = user?.accessToken;
-
-    await saveToken({ token });
-
+    // Vérification email
     if (!user.emailVerified) {
       await sendEmailVerification(user);
-      alert("Verify your email please.");
-      const interval = setInterval(async () => {
-        await user.reload();
-        if (user.emailVerified) {
-          clearInterval(interval);
-          dispatch(setProfile({ uid: user.uid }));
-          const events = await getCalendar();
-          const users = await getClients();
+      alert("Please verify your email. A verification link has been sent.");
 
-          dispatch(setCalendar(events));
-          dispatch(setClients(users));
-          router.replace("/calendar/week-view");
-        }
-      }, 5000);
-    } else {
-      dispatch(setProfile({ uid: user.uid }));
-      const events = await getCalendar();
-      const users = await getClients();
-
-      dispatch(setCalendar(events));
-      dispatch(setClients(users));
-      router.replace("/calendar/week-view");
+      // On attend que l'utilisateur vérifie lui-même avant login complet
+      return;
     }
+
+    // Récupération des infos nécessaires après login
+    dispatch(setProfile({ uid: user.uid }));
+    const events = await getCalendar();
+    const users = await getClients();
+
+    dispatch(setCalendar(events));
+    dispatch(setClients(users));
+
+    router.replace("/calendar/week-view");
   } catch (error: any) {
     console.error("Error signing in:", error.message);
     alert(error.message);
