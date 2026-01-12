@@ -81,18 +81,6 @@ export const getClients = async (): Promise<AppUser[]> => {
   return users;
 };
 
-export const updateUserInfo = async ({uid}: {uid: string}) => {
-  try {
-    await adminAuth.updateUser(uid, { emailVerified: false });
-    return { success: true };
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error?.message || "Server error" },
-      { status: 500 },
-    );
-  }
-}
-
 export const sendMail = async ({ to, subject, html }: any) => {
   try {
 

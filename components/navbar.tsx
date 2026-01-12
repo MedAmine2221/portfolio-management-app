@@ -39,7 +39,13 @@ export const Navbar = () => {
 
   const logout = async () => {
     try {
-      await updateUserInfo({uid: profile?.uid});
+      if (profile?.uid) {
+        await fetch("/api/update-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uid: profile.uid }),
+        });
+      }
       dispatch(clearToken());
       dispatch(clearProfile());
       dispatch(clearClients());
