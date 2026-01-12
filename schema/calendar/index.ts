@@ -12,10 +12,12 @@ export const eventSchema = yup.object({
         if (!value) return false;
         const now = new Date();
         const start = new Date(value);
+
         if (isNaN(start.getTime())) return false;
         const diffMinutes = (start.getTime() - now.getTime()) / (1000 * 60);
+
         return diffMinutes >= 30;
-      }
+      },
     ),
   endDate: yup
     .string()
@@ -26,13 +28,16 @@ export const eventSchema = yup.object({
       "La date de fin doit être au moins 30 minutes après la date de début",
       function (value) {
         const { startDate } = this.parent;
+
         if (!value || !startDate) return false;
         const start = new Date(startDate);
-        const end = new Date(value);       
+        const end = new Date(value);
+
         if (isNaN(start.getTime()) || isNaN(end.getTime())) return false;
-        const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);        
+        const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+
         return diffMinutes >= 30;
-      }
+      },
     ),
 });
 

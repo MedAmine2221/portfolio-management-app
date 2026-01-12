@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
 import type { SVGProps } from "react";
 import type { Selection, SortDescriptor } from "@heroui/react";
+
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -19,6 +20,7 @@ import {
   Chip,
   Pagination,
 } from "@heroui/react";
+
 import { NameAbreviation } from "@/lib/utils";
 import { AppUser } from "@/types";
 
@@ -27,33 +29,28 @@ import { AppUser } from "@/types";
 export type IconSvgProps = SVGProps<SVGSVGElement> & { size?: number };
 
 export const SearchIcon = (props: IconSvgProps) => (
-  <svg viewBox="0 0 24 24" width="1em" height="1em" {...props}>
+  <svg height="1em" viewBox="0 0 24 24" width="1em" {...props}>
     <path
       d="M11.5 21C16.7 21 21 16.7 21 11.5S16.7 2 11.5 2 2 6.3 2 11.5 6.3 21 11.5 21Z"
+      fill="none"
       stroke="currentColor"
       strokeWidth="2"
-      fill="none"
     />
     <path d="M22 22L20 20" stroke="currentColor" strokeWidth="2" />
   </svg>
 );
 
 export const ChevronDownIcon = (props: IconSvgProps) => (
-  <svg viewBox="0 0 24 24" width="1em" height="1em" {...props}>
-    <path
-      d="m19 9-7 7-7-7"
-      stroke="currentColor"
-      strokeWidth="2"
-      fill="none"
-    />
+  <svg height="1em" viewBox="0 0 24 24" width="1em" {...props}>
+    <path d="m19 9-7 7-7-7" fill="none" stroke="currentColor" strokeWidth="2" />
   </svg>
 );
 
 export const VerticalDotsIcon = (props: IconSvgProps) => (
-  <svg viewBox="0 0 24 24" width="1em" height="1em" {...props}>
-    <circle cx="12" cy="5" r="2" fill="currentColor" />
-    <circle cx="12" cy="12" r="2" fill="currentColor" />
-    <circle cx="12" cy="19" r="2" fill="currentColor" />
+  <svg height="1em" viewBox="0 0 24 24" width="1em" {...props}>
+    <circle cx="12" cy="5" fill="currentColor" r="2" />
+    <circle cx="12" cy="12" fill="currentColor" r="2" />
+    <circle cx="12" cy="19" fill="currentColor" r="2" />
   </svg>
 );
 
@@ -75,7 +72,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   "createdAt",
   "progress",
   "actions",
-  ""
+  "",
 ];
 
 /* ================= COMPONENT ================= */
@@ -83,23 +80,21 @@ const INITIAL_VISIBLE_COLUMNS = [
 export default function AppTables({ data }: { data: AppUser[] }) {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
-  const [visibleColumns, setVisibleColumns] =
-    React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
+    new Set(INITIAL_VISIBLE_COLUMNS),
+  );
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(1);
-  const [sortDescriptor, setSortDescriptor] =
-    React.useState<SortDescriptor>({
-      column: "lastName",
-      direction: "ascending",
-    });
+  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    column: "lastName",
+    direction: "ascending",
+  });
 
   /* ========== FILTER ========== */
 
   const filteredItems = React.useMemo(() => {
     return data.filter((user) =>
-      user.firstName
-        .toLowerCase()
-        .includes(filterValue.toLowerCase())
+      user.firstName.toLowerCase().includes(filterValue.toLowerCase()),
     );
   }, [data, filterValue]);
 
@@ -109,6 +104,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
+
     return filteredItems.slice(start, start + rowsPerPage);
   }, [page, filteredItems, rowsPerPage]);
 
@@ -118,8 +114,10 @@ export default function AppTables({ data }: { data: AppUser[] }) {
     return [...items].sort((a, b) => {
       const first = a[sortDescriptor.column as keyof AppUser];
       const second = b[sortDescriptor.column as keyof AppUser];
+
       if (first === second) return 0;
       const res = first > second ? 1 : -1;
+
       return sortDescriptor.direction === "descending" ? -res : res;
     });
   }, [items, sortDescriptor]);
@@ -130,11 +128,11 @@ export default function AppTables({ data }: { data: AppUser[] }) {
     switch (columnKey) {
       case "":
         return (
-            <div className="mr-4 rounded-full bg-default-100 border border-default-300 w-10 h-10 flex justify-center items-center"> 
-              <p className="mx-2 text-xl font-bold text-default-600">
-                {NameAbreviation(user.lastName, user.firstName)} 
-              </p> 
-            </div>
+          <div className="mr-4 rounded-full bg-default-100 border border-default-300 w-10 h-10 flex justify-center items-center">
+            <p className="mx-2 text-xl font-bold text-default-600">
+              {NameAbreviation(user.lastName, user.firstName)}
+            </p>
+          </div>
         );
       case "firstName":
         return user.firstName || "—";
@@ -157,7 +155,13 @@ export default function AppTables({ data }: { data: AppUser[] }) {
       case "progress":
         return (
           <Chip
-            color={user.progress === "to do" ? "danger" : user.progress === "in progress" ? "warning" : "success"}
+            color={
+              user.progress === "to do"
+                ? "danger"
+                : user.progress === "in progress"
+                  ? "warning"
+                  : "success"
+            }
             size="sm"
             variant="flat"
           >
@@ -195,58 +199,15 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
   const headerColumns = React.useMemo(() => {
     if (visibleColumns === "all") return columns;
-    return columns.filter((c) =>
-      Array.from(visibleColumns).includes(c.uid)
-    );
+
+    return columns.filter((c) => Array.from(visibleColumns).includes(c.uid));
   }, [visibleColumns]);
 
   /* ================= RENDER ================= */
   return (
     <Table
-      aria-label="Users table"
       isHeaderSticky
-      selectionMode="multiple"
-      selectedKeys={selectedKeys}
-      onSelectionChange={setSelectedKeys}
-      sortDescriptor={sortDescriptor}
-      onSortChange={setSortDescriptor}
-      topContent={
-        <div className="flex justify-between gap-3">
-          <Input
-            isClearable
-            placeholder="Search last name..."
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => setFilterValue("")}
-            onValueChange={setFilterValue}
-            className="max-w-xs"
-          />
-
-          <Dropdown>
-            <DropdownTrigger>
-              <Button
-                variant="flat"
-                endContent={<ChevronDownIcon />}
-              >
-                Columns
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              closeOnSelect={false}
-              disallowEmptySelection
-              selectedKeys={visibleColumns}
-              selectionMode="multiple"
-              onSelectionChange={setVisibleColumns}
-            >
-              {columns.map((col) => (
-                <DropdownItem key={col.uid}>
-                  {col.name}
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      }
+      aria-label="Users table"
       bottomContent={
         <div className="flex justify-between items-center px-2 py-2">
           <span className="text-sm text-default-400">
@@ -285,19 +246,53 @@ export default function AppTables({ data }: { data: AppUser[] }) {
       classNames={{
         wrapper: "max-h-[420px] bg-white text-black",
       }}
+      selectedKeys={selectedKeys}
+      selectionMode="multiple"
+      sortDescriptor={sortDescriptor}
+      topContent={
+        <div className="flex justify-between gap-3">
+          <Input
+            isClearable
+            className="max-w-xs"
+            placeholder="Search last name..."
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => setFilterValue("")}
+            onValueChange={setFilterValue}
+          />
+
+          <Dropdown>
+            <DropdownTrigger>
+              <Button endContent={<ChevronDownIcon />} variant="flat">
+                Columns
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              disallowEmptySelection
+              closeOnSelect={false}
+              selectedKeys={visibleColumns}
+              selectionMode="multiple"
+              onSelectionChange={setVisibleColumns}
+            >
+              {columns.map((col) => (
+                <DropdownItem key={col.uid}>{col.name}</DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
+      }
+      onSelectionChange={setSelectedKeys}
+      onSortChange={setSortDescriptor}
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
-          <TableColumn
-            key={column.uid}
-            allowsSorting={column.sortable}
-          >
+          <TableColumn key={column.uid} allowsSorting={column.sortable}>
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
 
-      <TableBody items={sortedItems} emptyContent="No users found">
+      <TableBody emptyContent="No users found" items={sortedItems}>
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (

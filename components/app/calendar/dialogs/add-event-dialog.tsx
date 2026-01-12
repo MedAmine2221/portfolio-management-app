@@ -1,23 +1,37 @@
-"use client";;
+"use client";
 import { useMemo, useState } from "react";
 import { Calendar, Clock, User } from "lucide-react";
 import { Button as HerouiButton } from "@heroui/button";
 import { Input } from "@heroui/input";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/shadcnUI/ui/dialog";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { eventSchema } from "@/schema/calendar";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/shadcnUI/ui/select";
-import { db } from "@/config/firebase";
 import { addDoc, collection } from "firebase/firestore";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/shadcnUI/ui/dialog";
+import { eventSchema } from "@/schema/calendar";
+import { RootState } from "@/redux/store";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/shadcnUI/ui/select";
+import { db } from "@/config/firebase";
 import { getTemplateMail } from "@/lib/utils";
 
 interface IProps {
   children: React.ReactNode;
 }
-const months= [
+const months = [
   "Jan",
   "Fév",
   "Mar",
@@ -29,8 +43,9 @@ const months= [
   "Sep",
   "Oct",
   "Nov",
-  "Déc" 
+  "Déc",
 ];
+
 export function AddEventDialog({ children }: IProps) {
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
@@ -42,37 +57,40 @@ export function AddEventDialog({ children }: IProps) {
     }));
   }, [clientsList]);
 
-  const { handleSubmit, reset, setValue, formState: { errors }, clearErrors } = useForm({
+  const {
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+    clearErrors,
+  } = useForm({
     resolver: yupResolver(eventSchema),
     defaultValues: {
       startDate: new Date().toISOString(),
       endDate: new Date().toISOString(),
-    }
+    },
   });
-  
+
   const resetForm = () => {
     const now = new Date().toISOString();
+
     reset({
       startDate: now,
       endDate: now,
     });
     setSelectedClient(null);
     clearErrors();
-  }
-  
-  const onSubmit = async (data: any) => { 
+  };
+
+  const onSubmit = async (data: any) => {
     if (!selectedClient) {
       alert("select client");
+
       return;
     }
 
     try {
-      const eventRef = collection(
-        db,
-        "contact",
-        selectedClient,
-        "events"
-      );
+      const eventRef = collection(db, "contact", selectedClient, "events");
 
       await addDoc(eventRef, {
         startDate: data.startDate,
@@ -80,30 +98,40 @@ export function AddEventDialog({ children }: IProps) {
         progress: "to do",
         lientMeet: "https//:www.google.com",
         createdAt: new Date().toISOString(),
-      });      
-      const selectedClientInfo: any = clientsList.find((item: any)=> item?.id === selectedClient);      
-      const template = getTemplateMail({data: {
-        client: selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
-        date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
-        startDate: new Date(data.startDate).getHours() + "h:" + new Date(data.startDate).getMinutes()+"min",
-        object: selectedClientInfo?.object,
-        lientMeet: "https//:www.google.com"
-      }});
-      await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      });
+      const selectedClientInfo: any = clientsList.find(
+        (item: any) => item?.id === selectedClient,
+      );
+      const template = getTemplateMail({
+        data: {
+          client:
+            selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
+          date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+          startDate:
+            new Date(data.startDate).getHours() +
+            "h:" +
+            new Date(data.startDate).getMinutes() +
+            "min",
+          object: selectedClientInfo?.object,
+          lientMeet: "https//:www.google.com",
+        },
+      });
+
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           to: selectedClientInfo?.email,
           subject: selectedClientInfo?.object,
-          html: template
-        })
+          html: template,
+        }),
       });
 
       alert("Event added successfuly");
     } catch (error) {
       console.error(error);
       alert("error whene adding event");
-    }finally {
+    } finally {
       resetForm();
       setOpen(false);
     }
@@ -116,13 +144,16 @@ export function AddEventDialog({ children }: IProps) {
         <DialogHeader>
           <DialogTitle>Add New Event</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* Client Select */}
           <div className="flex flex-col gap-1">
             <label className="flex items-center gap-1 font-medium text-sm">
               <User className="size-4" /> Client
             </label>
-            <Select onValueChange={(val) => setSelectedClient(val)} value={selectedClient || undefined}>
+            <Select
+              value={selectedClient || undefined}
+              onValueChange={(val) => setSelectedClient(val)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select a client" />
               </SelectTrigger>
@@ -142,11 +173,12 @@ export function AddEventDialog({ children }: IProps) {
               <Calendar className="size-4" /> Start Date
             </label>
             <Input
-              isInvalid={!!errors.startDate}
               errorMessage={errors.startDate?.message}
+              isInvalid={!!errors.startDate}
               type="datetime-local"
               onChange={(e) => {
                 const isoString = new Date(e.target.value).toISOString();
+
                 setValue("startDate", isoString, { shouldValidate: true });
               }}
             />
@@ -158,11 +190,12 @@ export function AddEventDialog({ children }: IProps) {
               <Clock className="size-4" /> End Date
             </label>
             <Input
-              isInvalid={!!errors.endDate}
               errorMessage={errors.endDate?.message}
+              isInvalid={!!errors.endDate}
               type="datetime-local"
               onChange={(e) => {
                 const isoString = new Date(e.target.value).toISOString();
+
                 setValue("endDate", isoString, { shouldValidate: true });
               }}
             />

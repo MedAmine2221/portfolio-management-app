@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Calendar } from "lucide-react";
+
 import { Button } from "../ui/button";
 
 export function Header() {
@@ -16,12 +17,12 @@ export function Header() {
             <p className="text-sm text-foreground">
               Built with Next.js and Tailwind by{" "}
               <Link
+                className="inline-flex gap-0.5 text-sm underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 href="https://github.com/lramos33"
                 target="_blank"
-                className="inline-flex gap-0.5 text-sm underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
                 lramos33
-                <ArrowUpRight size={12} className="text-foreground" />
+                <ArrowUpRight className="text-foreground" size={12} />
               </Link>
             </p>
           </div>
@@ -29,29 +30,29 @@ export function Header() {
 
         <div className="hidden items-center gap-4 md:flex">
           <Link
+            className="inline-flex gap-0.5 text-sm hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             href="https://github.com/lramos33/big-calendar"
             target="_blank"
-            className="inline-flex gap-0.5 text-sm hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           >
             View on GitHub
-            <ArrowUpRight size={14} className="text-foreground" />
+            <ArrowUpRight className="text-foreground" size={14} />
           </Link>
 
           <div className="flex items-center gap-2">
-            <Button size="icon" asChild variant="ghost">
+            <Button asChild size="icon" variant="ghost">
               <Link href="https://x.com/leoo_ramos1" target="_blank">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
                   fill="none"
+                  height="24"
                   stroke="currentColor"
-                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M0 0h24v24H0z" fill="none" stroke="none" />
                   <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
                   <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
                 </svg>

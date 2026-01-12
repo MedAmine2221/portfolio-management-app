@@ -22,7 +22,8 @@ export default function NavMenu({ isMobile }: { isMobile?: boolean }) {
       {siteConfig.navItems.map((item) => (
         <Tab key={item.href} title={item.label} />
       ))}
-    </Tabs>):(
+    </Tabs>
+  ) : (
     <Tabs
       aria-label="Navigation"
       selectedKey={pathname}

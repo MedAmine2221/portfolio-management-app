@@ -16,7 +16,9 @@ export function TodayButton() {
       <p className="flex h-6 w-full items-center justify-center bg-primary text-center text-xs font-semibold text-primary-foreground">
         {formatDate(today, "MMM").toUpperCase()}
       </p>
-      <p className="flex w-full items-center justify-center text-lg font-bold">{today.getDate()}</p>
+      <p className="flex w-full items-center justify-center text-lg font-bold">
+        {today.getDate()}
+      </p>
     </button>
   );
 }

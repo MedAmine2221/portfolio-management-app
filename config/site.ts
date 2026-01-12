@@ -11,7 +11,7 @@ export const siteConfig = {
     {
       label: "Clients",
       href: "/clients",
-    }
+    },
   ],
   navMenuItems: [
     {
@@ -21,7 +21,7 @@ export const siteConfig = {
     {
       label: "Clients",
       href: "/clients",
-    }
+    },
   ],
   links: {
     github: "https://github.com/MedAmine2221",

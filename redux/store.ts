@@ -1,12 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+
 import profileReducer from "./profile/profileReducer";
 import loadingReducer from "./loadingReducer";
 import calendarReducer from "./calendar/calendarReducer";
 import clientReducer from "./clients/clientReducer";
 import authReducer from "./auth/authReducer";
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
 
 const authPersistConfig = {
   key: "auth",

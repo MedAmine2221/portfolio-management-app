@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Columns, Plus, Grid2x2, CalendarRange } from "lucide-react";
 
 import { Button } from "@/components/shadcnUI/ui/button";
-
 import { TodayButton } from "@/components/app/calendar/header/today-button";
 import { DateNavigator } from "@/components/app/calendar/header/date-navigator";
 import { AddEventDialog } from "@/components/app/calendar/dialogs/add-event-dialog";
@@ -13,7 +12,7 @@ export function CalendarHeader({ view, events }: Props) {
     <div className="flex flex-col gap-4 border-b border-b-default-100 p-4 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex items-center gap-3">
         <TodayButton />
-        <DateNavigator view={view} events={events} />
+        <DateNavigator events={events} view={view} />
       </div>
 
       <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:justify-between">
@@ -22,9 +21,9 @@ export function CalendarHeader({ view, events }: Props) {
             <Button
               asChild
               aria-label="View by week"
+              className="-ml-px rounded-r-none [&_svg]:size-5"
               size="icon"
               variant={view === "week" ? "default" : "outline"}
-              className="-ml-px rounded-r-none [&_svg]:size-5"
             >
               <Link href="/calendar/week-view">
                 <Columns strokeWidth={1.8} />
@@ -34,9 +33,9 @@ export function CalendarHeader({ view, events }: Props) {
             <Button
               asChild
               aria-label="View by month"
+              className="-ml-px rounded-none [&_svg]:size-5"
               size="icon"
               variant={view === "month" ? "default" : "outline"}
-              className="-ml-px rounded-none [&_svg]:size-5"
             >
               <Link href="/calendar/month-view">
                 <Grid2x2 strokeWidth={1.8} />
@@ -46,9 +45,9 @@ export function CalendarHeader({ view, events }: Props) {
             <Button
               asChild
               aria-label="View by agenda"
+              className="-ml-px rounded-l-none [&_svg]:size-5"
               size="icon"
               variant={view === "agenda" ? "default" : "outline"}
-              className="-ml-px rounded-l-none [&_svg]:size-5"
             >
               <Link href="/calendar/agenda-view">
                 <CalendarRange strokeWidth={1.8} />

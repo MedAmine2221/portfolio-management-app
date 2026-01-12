@@ -5,20 +5,21 @@ import NextLink from "next/link";
 import { FiFacebook, FiInstagram, FiLinkedin, FiLogOut } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import { siteConfig } from "@/config/site";
-import { GithubIcon, SearchIcon } from "@/components/icons";
-import NavMenu from "./app/nav-menu";
 import Image from "next/image";
 import { Button } from "@heroui/button";
 import { useDispatch, useSelector } from "react-redux";
+
+import NavMenu from "./app/nav-menu";
+
+import { GithubIcon, SearchIcon } from "@/components/icons";
+import { siteConfig } from "@/config/site";
 import { RootState } from "@/redux/store";
 import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
 
 export const Navbar = () => {
-  const profile: any = useSelector((item: RootState)=> item?.profile?.items);
+  const profile: any = useSelector((item: RootState) => item?.profile?.items);
   const router = useRouter();
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
@@ -45,9 +46,9 @@ export const Navbar = () => {
       dispatch(clearCalendar());
       router.replace("/auth");
     } catch (error) {
-     console.error(error);
+      console.error(error);
     }
-  }
+  };
 
   const searchInput = (
     <Input
@@ -108,7 +109,7 @@ export const Navbar = () => {
           className="flex flex-row items-center font-bold text-black text-lg tracking-tight hover:text-black transition-colors"
           href="/calendar/week-view"
         >
-          <Image alt= "amine" src={"/amine.png"} width={75} height={75} />
+          <Image alt="amine" height={75} src={"/amine.png"} width={75} />
           Mohamed Amine LAZREG
         </NextLink>
         <NavMenu />
@@ -119,10 +120,10 @@ export const Navbar = () => {
             isExternal
             as={Link}
             className="text-sm text-red-700 bg-red-100 border border-red-200 font-normal"
-            onPress={logout}
             variant="flat"
+            onPress={logout}
           >
-            <FiLogOut size={20} color="var(--color-red-700)" />
+            <FiLogOut color="var(--color-red-700)" size={20} />
           </Button>
         </div>
       </div>
@@ -133,17 +134,17 @@ export const Navbar = () => {
             className="font-bold text-black text-lg tracking-tight"
             href="/calendar/week-view"
           >
-            <Image alt= "amine" src={"/amine.png"} width={75} height={75} />
+            <Image alt="amine" height={75} src={"/amine.png"} width={75} />
           </NextLink>
           {socialLinks}
           <Button
             isExternal
             as={Link}
             className="ml-4 text-sm text-red-700 bg-red-100 border border-red-200 font-normal"
-            onPress={logout}
             variant="flat"
+            onPress={logout}
           >
-            <FiLogOut size={20} color="var(--color-red-700)" />
+            <FiLogOut color="var(--color-red-700)" size={20} />
           </Button>
         </div>
         <div className="w-full border-t border-default-200/20 py-3">

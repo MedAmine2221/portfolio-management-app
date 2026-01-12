@@ -1,25 +1,35 @@
-import { auth } from "@/config/firebase";
 import { clsx, type ClassValue } from "clsx";
-import { sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
 import { getCalendar, getClients, saveToken } from "./server-functions";
+
+import { auth } from "@/config/firebase";
 import { setProfile } from "@/redux/profile/profileReducer";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { setCalendar } from "@/redux/calendar/calendarReducer";
 import { setClients } from "@/redux/clients/clientReducer";
 
 export function cn(...inputs: ClassValue[]) {
-  return (clsx(inputs))
+  return clsx(inputs);
 }
-export function NameAbreviation(lastName: string, firstName: string){
+export function NameAbreviation(lastName: string, firstName: string) {
   const lastNameList = lastName.split(" ");
   const firstNameList = firstName.split(" ");
-  const rsltLN = lastNameList.reduce((acc, current)=> acc + current[0] , "").toUpperCase()
-  const rsltFN = firstNameList.reduce((acc, current)=> acc + current[0] , "").toUpperCase()
-  const result = rsltLN+rsltFN
+  const rsltLN = lastNameList
+    .reduce((acc, current) => acc + current[0], "")
+    .toUpperCase();
+  const rsltFN = firstNameList
+    .reduce((acc, current) => acc + current[0], "")
+    .toUpperCase();
+  const result = rsltLN + rsltFN;
+
   return result;
 }
 
-export const signIn = async (data: any, dispatch: any ,router: any) => {
+export const signIn = async (data: any, dispatch: any, router: any) => {
   try {
     dispatch(setLoadingTrue());
     const { email, password } = data;
@@ -27,12 +37,13 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
     );
 
     const user: any = userCredential.user;
-    
+
     const token = user?.accessToken;
+
     await saveToken({ token });
 
     if (!user.emailVerified) {
@@ -40,26 +51,26 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
       alert("Verify your email please.");
       const interval = setInterval(async () => {
         await user.reload();
-        if (user.emailVerified) {          
+        if (user.emailVerified) {
           clearInterval(interval);
-          dispatch(setProfile({uid: user.uid }))
+          dispatch(setProfile({ uid: user.uid }));
           const events = await getCalendar();
-          const users = await getClients();       
-          dispatch(setCalendar(events))
-          dispatch(setClients(users))
+          const users = await getClients();
+
+          dispatch(setCalendar(events));
+          dispatch(setClients(users));
           router.replace("/calendar/week-view");
         }
       }, 5000);
-
     } else {
-      dispatch(setProfile({uid: user.uid }))
+      dispatch(setProfile({ uid: user.uid }));
       const events = await getCalendar();
-      const users = await getClients();       
-      dispatch(setCalendar(events))
-      dispatch(setClients(users))
+      const users = await getClients();
+
+      dispatch(setCalendar(events));
+      dispatch(setClients(users));
       router.replace("/calendar/week-view");
     }
-
   } catch (error: any) {
     console.error("Error signing in:", error.message);
     alert(error.message);
@@ -68,7 +79,7 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
   }
 };
 
-export const getTemplateMail = ({data}: any,) => {
+export const getTemplateMail = ({ data }: any) => {
   return `
     <!DOCTYPE html>
       <html lang="fr">
@@ -281,7 +292,7 @@ export const getTemplateMail = ({data}: any,) => {
                   </div>
                   
                   <p class="message">
-                    ${data.edit ? `Nous vous informons que votre rendez-vous du [${data.ancienne_date}] a été reporté.`:`Nous avons le plaisir de confirmer votre rendez-vous. Nous nous réjouissons de vous rencontrer et de répondre à vos besoins.`}
+                    ${data.edit ? `Nous vous informons que votre rendez-vous du [${data.ancienne_date}] a été reporté.` : `Nous avons le plaisir de confirmer votre rendez-vous. Nous nous réjouissons de vous rencontrer et de répondre à vos besoins.`}
                   </p>
                   
                   <!-- Appointment Details Box -->
@@ -357,5 +368,5 @@ export const getTemplateMail = ({data}: any,) => {
           </div>
       </body>
       </html>
-  `
-}
+  `;
+};

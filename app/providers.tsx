@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import type { ThemeProviderProps } from "next-themes";
 
 import * as React from "react";
@@ -21,9 +21,5 @@ declare module "@react-types/shared" {
 export function Providers({ children }: ProvidersProps) {
   const router = useRouter();
 
-  return (
-    <HeroUIProvider navigate={router.push}>
-      {children}
-    </HeroUIProvider>
-  );
+  return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>;
 }

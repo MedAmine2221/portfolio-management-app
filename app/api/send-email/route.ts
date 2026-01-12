@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
@@ -27,9 +27,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);
+
     return NextResponse.json(
       { success: false, error: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

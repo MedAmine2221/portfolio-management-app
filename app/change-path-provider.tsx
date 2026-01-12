@@ -1,24 +1,35 @@
-"use client";;
+"use client";
 import "@/styles/globals.css";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { ReactNode, useEffect } from "react";
+
+import { RootState } from "@/redux/store";
 import { signIn } from "@/lib/utils";
 
-export default function ChangePathProvider({children}:{children: ReactNode}) {
+export default function ChangePathProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const router = useRouter();
-  const auth = useSelector((item: RootState)=>item.auth.auth);  
+  const auth = useSelector((item: RootState) => item.auth.auth);
   const dispatch = useDispatch();
-  useEffect(() => {    
+
+  useEffect(() => {
     const checkToken = async () => {
       const res = await fetch("/api/get-token");
       const data = await res.json();
+
       if (data.token) {
-        signIn({
-          email: auth.email,
-          password: auth.password
-        },dispatch, router)
+        signIn(
+          {
+            email: auth.email,
+            password: auth.password,
+          },
+          dispatch,
+          router,
+        );
         router.replace("/calendar/week-view");
       } else {
         router.replace("/auth");
@@ -27,9 +38,6 @@ export default function ChangePathProvider({children}:{children: ReactNode}) {
 
     checkToken();
   }, [router]);
-  return(
-    <>
-      {children}
-    </>
-  )
+
+  return <>{children}</>;
 }

@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-
 import type { Dispatch, SetStateAction } from "react";
 import type { IUser } from "@/types/interfaces";
+
+import { createContext, useContext, useState } from "react";
+
 import { TBadgeVariant, TVisibleHours } from "@/types";
 
 interface ICalendarContext {
@@ -23,9 +24,12 @@ const VISIBLE_HOURS = { from: 8, to: 22 };
 
 export function CalendarProvider({ children }: { children: React.ReactNode }) {
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
-  const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS);
+  const [visibleHours, setVisibleHours] =
+    useState<TVisibleHours>(VISIBLE_HOURS);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedUserId, setSelectedUserId] = useState<IUser["id"] | "all">("all");
+  const [selectedUserId, setSelectedUserId] = useState<IUser["id"] | "all">(
+    "all",
+  );
 
   // This localEvents doesn't need to exists in a real scenario.
   // It's used here just to simulate the update of the events.
@@ -56,6 +60,9 @@ export function CalendarProvider({ children }: { children: React.ReactNode }) {
 
 export function useCalendar(): ICalendarContext {
   const context = useContext(CalendarContext);
-  if (!context) throw new Error("useCalendar must be used within a CalendarProvider.");
+
+  if (!context)
+    throw new Error("useCalendar must be used within a CalendarProvider.");
+
   return context;
 }
