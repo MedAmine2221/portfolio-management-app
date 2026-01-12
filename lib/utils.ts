@@ -30,7 +30,7 @@ export const signIn = async (data: any, dispatch: any ,router: any) => {
       password
     );
 
-    const user = userCredential.user;
+    const user: any = userCredential.user;
     
     const token = user?.accessToken;
     await saveToken({ token });

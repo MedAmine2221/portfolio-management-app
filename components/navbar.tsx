@@ -18,7 +18,7 @@ import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
 
 export const Navbar = () => {
-  const profile = useSelector((item: RootState)=> item?.profile?.items);
+  const profile: any = useSelector((item: RootState)=> item?.profile?.items);
   const router = useRouter();
   const dispatch = useDispatch();
   const [search, setSearch] = useState("");
