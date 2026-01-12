@@ -33,6 +33,7 @@ const months= [
   "Déc" 
 ];
 export function AddEventDialog({ children }: IProps) {
+  const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const clientOptions = useMemo(() => {
@@ -41,15 +42,26 @@ export function AddEventDialog({ children }: IProps) {
       label: item.firstName + " " + item.lastName,
     }));
   }, [clientsList]);
-  
-  const [start, setStart] = useState(new Date().toISOString());
-  const [end, setEnd] = useState(new Date().toISOString());
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { handleSubmit, reset, setValue, formState: { errors }, clearErrors } = useForm({
     resolver: yupResolver(eventSchema),
+    defaultValues: {
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+    }
   });
-
-  const onSubmit = async (data: any) => {    
+  
+  const resetForm = () => {
+    const now = new Date().toISOString();
+    reset({
+      startDate: now,
+      endDate: now,
+    });
+    setSelectedClient(null);
+    clearErrors();
+  }
+  
+  const onSubmit = async (data: any) => { 
     if (!selectedClient) {
       alert("select client");
       return;
@@ -92,11 +104,14 @@ export function AddEventDialog({ children }: IProps) {
     } catch (error) {
       console.error(error);
       alert("error whene adding event");
+    }finally {
+      resetForm();
+      setOpen(false);
     }
   };
 
   return (
-    <Dialog modal={true}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -108,7 +123,7 @@ export function AddEventDialog({ children }: IProps) {
             <label className="flex items-center gap-1 font-medium text-sm">
               <User className="size-4" /> Client
             </label>
-            <Select onValueChange={(val) => setSelectedClient(val)}>
+            <Select onValueChange={(val) => setSelectedClient(val)} value={selectedClient || undefined}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a client" />
               </SelectTrigger>
@@ -128,12 +143,13 @@ export function AddEventDialog({ children }: IProps) {
               <Calendar className="size-4" /> Start Date
             </label>
             <Input
-              {...register("startDate")}
               isInvalid={!!errors.startDate}
               errorMessage={errors.startDate?.message}
               type="datetime-local"
-              value={format(parseISO(start), "yyyy-MM-dd'T'HH:mm")}
-              onChange={(e) => setStart(new Date(e.target.value).toISOString())}
+              onChange={(e) => {
+                const isoString = new Date(e.target.value).toISOString();
+                setValue("startDate", isoString, { shouldValidate: true });
+              }}
             />
           </div>
 
@@ -143,12 +159,13 @@ export function AddEventDialog({ children }: IProps) {
               <Clock className="size-4" /> End Date
             </label>
             <Input
-              {...register("endDate")}
               isInvalid={!!errors.endDate}
               errorMessage={errors.endDate?.message}
               type="datetime-local"
-              value={format(parseISO(end), "yyyy-MM-dd'T'HH:mm")}
-              onChange={(e) => setEnd(new Date(e.target.value).toISOString())}
+              onChange={(e) => {
+                const isoString = new Date(e.target.value).toISOString();
+                setValue("endDate", isoString, { shouldValidate: true });
+              }}
             />
           </div>
 

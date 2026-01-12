@@ -1,6 +1,6 @@
 "use client";;
-import { useState } from "react";
-import { format, parseISO } from "date-fns";
+import { useMemo, useState } from "react";
+import { format, isValid } from "date-fns";
 import { Calendar, Clock, Text, User } from "lucide-react";
 
 import { Button } from "@/components/shadcnUI/ui/button";
@@ -37,13 +37,17 @@ const months= [
 ];
 export function EventDetailsDialog({ event, children }: IProps) {  
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const startDate = parseISO(event.startDate);
-  const endDate = parseISO(event.endDate);
-  const [start, setStart] = useState(event.startDate);
-  const [end, setEnd] = useState(event.endDate);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const [start, setStart] = useState(() => event.startDate || new Date().toISOString());
+  const [end, setEnd] = useState(() => event.endDate || new Date().toISOString());
+  
+  const { handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
     resolver: yupResolver(eventSchema),
+    defaultValues: {
+      startDate: event.startDate || new Date().toISOString(),
+      endDate: event.endDate || new Date().toISOString(),
+    }
   });
+  
   const onSubmit = async (data: any) => {
     try {
       const ancienne_date = `${new Date(event.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`
@@ -80,14 +84,30 @@ export function EventDetailsDialog({ event, children }: IProps) {
           html: template
         })
       });
+      
+      // Update local state after successful save
+      setStart(data.startDate);
+      setEnd(data.endDate);
+      
       alert("Event updated successfully");
       setIsEditOpen(false);
+      clearErrors();
     } catch (error) {
       console.error(error);
       alert("Error updating event");
     }
   };
+  
+  const startDateObj = useMemo(() => {
+    const d = new Date(start);
+    return isValid(d) ? d : null;
+  }, [start]);
 
+  const endDateObj = useMemo(() => {
+    const d = new Date(end);
+    return isValid(d) ? d : null;
+  }, [end]);
+  
   return (
     <>
       <Dialog>
@@ -115,12 +135,15 @@ export function EventDetailsDialog({ event, children }: IProps) {
                     <Calendar className="size-4" /> Start Date
                   </label>
                   <Input
-                    {...register("startDate")}
-                    isInvalid={!!errors["startDate"]}
-                    errorMessage={errors["startDate"]?.message}
+                    isInvalid={!!errors.startDate}
+                    errorMessage={errors.startDate?.message}
                     type="datetime-local"
-                    value={format(parseISO(start), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setStart(new Date(e.target.value).toISOString())}
+                    value={start ? format(new Date(start), "yyyy-MM-dd'T'HH:mm") : ""}
+                    onChange={(e) => {
+                      const isoString = new Date(e.target.value).toISOString();
+                      setStart(isoString);
+                      setValue("startDate", isoString, { shouldValidate: true });
+                    }}
                   />
                 </div>
       
@@ -130,12 +153,15 @@ export function EventDetailsDialog({ event, children }: IProps) {
                     <Clock className="size-4" /> End Date
                   </label>
                   <Input
-                    {...register("endDate")}
-                    isInvalid={!!errors["endDate"]}
-                    errorMessage={errors["endDate"]?.message}
+                    isInvalid={!!errors.endDate}
+                    errorMessage={errors.endDate?.message}
                     type="datetime-local"
-                    value={format(parseISO(end), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setEnd(new Date(e.target.value).toISOString())}
+                    value={end ? format(new Date(end), "yyyy-MM-dd'T'HH:mm") : ""}
+                    onChange={(e) => {
+                      const isoString = new Date(e.target.value).toISOString();
+                      setEnd(isoString);
+                      setValue("endDate", isoString, { shouldValidate: true });
+                    }}
                   />
                 </div>
                 {
@@ -149,7 +175,18 @@ export function EventDetailsDialog({ event, children }: IProps) {
                       </div>
                     </div>
                     <DialogFooter className="mt-4 flex justify-end gap-2">
-                      <HerouiButton variant="bordered" onPress={()=> setIsEditOpen(false)}>Cancel</HerouiButton>
+                      <HerouiButton 
+                        variant="bordered" 
+                        onPress={() => {
+                          setIsEditOpen(false);
+                          // Reset to original values
+                          setStart(event.startDate || new Date().toISOString());
+                          setEnd(event.endDate || new Date().toISOString());
+                          clearErrors();
+                        }}
+                      >
+                        Cancel
+                      </HerouiButton>
                       <HerouiButton type="submit">Save</HerouiButton>
                     </DialogFooter>
                   </>
@@ -161,7 +198,9 @@ export function EventDetailsDialog({ event, children }: IProps) {
                   <Calendar className="mt-1 size-4 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">Start Date</p>
-                    <p className="text-sm text-muted-foreground">{format(startDate, "MMM d, yyyy h:mm a")}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {startDateObj ? format(startDateObj, "MMM d, yyyy h:mm a") : "Invalid date"}
+                    </p>
                   </div>
                 </div>
 
@@ -169,7 +208,9 @@ export function EventDetailsDialog({ event, children }: IProps) {
                   <Clock className="mt-1 size-4 shrink-0" />
                   <div>
                     <p className="text-sm font-medium">End Date</p>
-                    <p className="text-sm text-muted-foreground">{format(endDate, "MMM d, yyyy h:mm a")}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {endDateObj ? format(endDateObj, "MMM d, yyyy h:mm a") : "Invalid date"}
+                    </p>
                   </div>
                 </div>
               </>

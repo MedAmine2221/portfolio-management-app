@@ -39,7 +39,7 @@ export default function RootLayout({
                 <div className="flex items-center gap-1 text-current">
                   <FaCopyright className="text-white" />
                   <span className="text-default-600 text-sm">
-                    All rights reserved {new Date().getFullYear()},
+                    All rights reserved {new Date().getFullYear()} 
                   </span>
                   <p className="text-primary text-sm">Mohamed Amine LAZREG</p>
                 </div>
