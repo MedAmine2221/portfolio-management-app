@@ -43,7 +43,6 @@ export const signIn = async (data: any, dispatch: AppDispatch, router: any) => {
     const user: any = userCredential.user;
     const token = user?.accessToken;
     await saveToken({ token });
-    alert("Verify your email please.");
     dispatch(setProfile({ uid: user.uid }));
     const events = await getCalendar();
     const users = await getClients()  
