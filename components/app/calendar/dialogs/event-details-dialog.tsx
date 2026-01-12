@@ -39,14 +39,22 @@ export function EventDetailsDialog({ event, children }: IProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [start, setStart] = useState(() => event.startDate || new Date().toISOString());
   const [end, setEnd] = useState(() => event.endDate || new Date().toISOString());
-  
-  const { handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+  const [open, setOpen] = useState(false);
+  const { reset, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
     resolver: yupResolver(eventSchema),
     defaultValues: {
       startDate: event.startDate || new Date().toISOString(),
       endDate: event.endDate || new Date().toISOString(),
     }
   });
+  const resetForm = () => {
+    const now = new Date().toISOString();
+    reset({
+      startDate: now,
+      endDate: now,
+    });
+    clearErrors();
+  }
   
   const onSubmit = async (data: any) => {
     try {
@@ -85,7 +93,6 @@ export function EventDetailsDialog({ event, children }: IProps) {
         })
       });
       
-      // Update local state after successful save
       setStart(data.startDate);
       setEnd(data.endDate);
       
@@ -95,6 +102,9 @@ export function EventDetailsDialog({ event, children }: IProps) {
     } catch (error) {
       console.error(error);
       alert("Error updating event");
+    }finally {
+      resetForm();
+      setOpen(false);
     }
   };
   
@@ -110,7 +120,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
   
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
 
         <DialogContent>
@@ -182,6 +192,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
                           // Reset to original values
                           setStart(event.startDate || new Date().toISOString());
                           setEnd(event.endDate || new Date().toISOString());
+                          setOpen(false);
                           clearErrors();
                         }}
                       >
