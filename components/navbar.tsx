@@ -18,6 +18,7 @@ import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
 import { updateUserInfo } from "@/lib/server-functions";
+import { clearToken } from "@/redux/token/tokenReducer";
 
 export const Navbar = () => {
   const profile: any = useSelector((item: RootState) => item?.profile?.items);
@@ -38,7 +39,8 @@ export const Navbar = () => {
 
   const logout = async () => {
     try {
-      await updateUserInfo({uid: profile?.uid})
+      await updateUserInfo({uid: profile?.uid});
+      dispatch(clearToken());
       dispatch(clearProfile());
       dispatch(clearClients());
       dispatch(clearCalendar());

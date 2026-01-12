@@ -84,8 +84,6 @@ export const getClients = async (): Promise<AppUser[]> => {
 export const updateUserInfo = async ({uid}: {uid: string}) => {
   try {
     await adminAuth.updateUser(uid, { emailVerified: false });
-    await removeToken();
-
     return { success: true };
   } catch (error: any) {
     return NextResponse.json(

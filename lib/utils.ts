@@ -4,7 +4,7 @@ import {
     signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import { getCalendar, getClients, saveToken } from "./server-functions";
+import { getCalendar, getClients } from "./server-functions";
 
 import { auth } from "@/config/firebase";
 import { setProfile } from "@/redux/profile/profileReducer";
@@ -12,6 +12,7 @@ import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { setCalendar } from "@/redux/calendar/calendarReducer";
 import { setClients } from "@/redux/clients/clientReducer";
 import { AppDispatch } from "@/redux/store";
+import { setToken } from "@/redux/token/tokenReducer";
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -44,9 +45,7 @@ export const signIn = async (data: any, dispatch: AppDispatch, router: any) => {
     const user: any = userCredential.user;
 
     const token = user?.accessToken;
-
-    await saveToken({ token });
-
+    dispatch(setToken({token}));
     if (!user.emailVerified) {
       await sendEmailVerification(user);
       alert("Verify your email please.");

@@ -15,13 +15,19 @@ import loadingReducer from "./loadingReducer";
 import calendarReducer from "./calendar/calendarReducer";
 import clientReducer from "./clients/clientReducer";
 import authReducer from "./auth/authReducer";
+import tokenReducer from "./token/tokenReducer";
 
 const authPersistConfig = {
   key: "auth",
   storage,
 };
+const tokenPersistConfig = {
+  key: "token",
+  storage,
+};
 
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedTokenReducer = persistReducer(tokenPersistConfig, tokenReducer);
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +36,7 @@ export const store = configureStore({
     clients: clientReducer,
     loading: loadingReducer,
     auth: persistedAuthReducer,
+    token: persistedTokenReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
