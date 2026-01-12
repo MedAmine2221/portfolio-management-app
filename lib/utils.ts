@@ -2,7 +2,6 @@ import { clsx, type ClassValue } from "clsx";
 import {
   sendEmailVerification,
   signInWithEmailAndPassword,
-  User,
 } from "firebase/auth";
 
 import { getCalendar, getClients, saveToken } from "./server-functions";
@@ -31,85 +30,25 @@ export function NameAbreviation(lastName: string, firstName: string) {
   return result;
 }
 
-// export const signIn = async (data: any, dispatch: any, router: any) => {
-//   try {
-//     dispatch(setLoadingTrue());
-//     const { email, password } = data;
-
-//     const userCredential = await signInWithEmailAndPassword(
-//       auth,
-//       email,
-//       password,
-//     );
-
-//     const user: any = userCredential.user;
-
-//     const token = user?.accessToken;
-
-//     await saveToken({ token });
-
-//     if (!user.emailVerified) {
-//       await sendEmailVerification(user);
-//       alert("Verify your email please.");
-//       const interval = setInterval(async () => {
-//         await user.reload();
-//         if (user.emailVerified) {
-//           clearInterval(interval);
-//           dispatch(setProfile({ uid: user.uid }));
-//           const events = await getCalendar();
-//           const users = await getClients();
-
-//           dispatch(setCalendar(events));
-//           dispatch(setClients(users));
-//           router.replace("/calendar/week-view");
-//         }
-//       }, 5000);
-//     } else {
-//       dispatch(setProfile({ uid: user.uid }));
-//       const events = await getCalendar();
-//       const users = await getClients();
-
-//       dispatch(setCalendar(events));
-//       dispatch(setClients(users));
-//       router.replace("/calendar/week-view");
-//     }
-//   } catch (error: any) {
-//     console.error("Error signing in:", error.message);
-//     alert(error.message);
-//   } finally {
-//     dispatch(setLoadingFalse());
-//   }
-// };
-
-export const signIn = async (
-  email: string,
-  password: string,
-  dispatch: AppDispatch,
-  router: any
-) => {
+export const signIn = async (data: any, dispatch: AppDispatch, router: any) => {
   try {
     dispatch(setLoadingTrue());
+    const { email, password } = data;
 
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user: User = userCredential.user;
-
-    // Vérification email
-    if (!user.emailVerified) {
-      await sendEmailVerification(user);
-      alert("Please verify your email. A verification link has been sent.");
-
-      // On attend que l'utilisateur vérifie lui-même avant login complet
-      return;
-    }
-
-    // Récupération des infos nécessaires après login
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user: any = userCredential.user;
+    const token = user?.accessToken;
+    await saveToken({ token });
+    alert("Verify your email please.");
     dispatch(setProfile({ uid: user.uid }));
     const events = await getCalendar();
-    const users = await getClients();
-
+    const users = await getClients()  
     dispatch(setCalendar(events));
     dispatch(setClients(users));
-
     router.replace("/calendar/week-view");
   } catch (error: any) {
     console.error("Error signing in:", error.message);
