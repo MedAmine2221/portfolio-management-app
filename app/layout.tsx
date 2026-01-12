@@ -4,7 +4,6 @@ import { FaCopyright } from "react-icons/fa";
 
 import { Providers } from "./providers";
 import { ReduxProviders } from "./redux-provider";
-import ChangePathProvider from "./change-path-provider";
 
 import { siteConfig } from "@/config/site";
 
@@ -29,7 +28,6 @@ export default function RootLayout({
       <body>
         <ReduxProviders>
           <Providers>
-            <ChangePathProvider>
               <div className="relative flex min-h-screen flex-col">
                 <main className="flex-1">{children}</main>
 
@@ -43,7 +41,6 @@ export default function RootLayout({
                   </div>
                 </footer>
               </div>
-            </ChangePathProvider>
           </Providers>
         </ReduxProviders>
       </body>
