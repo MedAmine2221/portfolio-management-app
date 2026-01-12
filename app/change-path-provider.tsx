@@ -12,7 +12,7 @@ export default function ChangePathProvider({
 }: {
   children: ReactNode;
 }) {
-   const router = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
   const auth = useSelector((item: RootState) => item.auth.auth);
   const token = useSelector((item:RootState)=>item.token.token);
@@ -30,7 +30,7 @@ export default function ChangePathProvider({
         );
         router.replace("/calendar/week-view");
       } else {
-        if(pathname != "/"){
+        if(pathname != "/auth"){
           router.replace("/auth");
         }
       }
