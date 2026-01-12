@@ -17,7 +17,6 @@ import { RootState } from "@/redux/store";
 import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
-import { updateUserInfo } from "@/lib/server-functions";
 import { clearToken } from "@/redux/token/tokenReducer";
 
 export const Navbar = () => {
