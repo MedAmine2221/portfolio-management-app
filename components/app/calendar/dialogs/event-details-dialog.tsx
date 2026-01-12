@@ -22,6 +22,7 @@ import {
 } from "@/components/shadcnUI/ui/dialog";
 import { Button } from "@/components/shadcnUI/ui/button";
 import { getTemplateMail } from "@/lib/utils";
+import { sendMail } from "@/lib/server-functions";
 
 interface IProps {
   event: IEvent;
@@ -107,17 +108,13 @@ export function EventDetailsDialog({ event, children }: IProps) {
           lientMeet: "https//:www.google.com",
         },
       });
-
-      await fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await sendMail(
+        {
           to: event.user.email,
           subject: event.title,
           html: template,
-        }),
-      });
-
+        }
+      )
       setStart(data.startDate);
       setEnd(data.endDate);
 

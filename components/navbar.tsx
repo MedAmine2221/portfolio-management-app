@@ -17,6 +17,7 @@ import { RootState } from "@/redux/store";
 import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
+import { updateUserInfo } from "@/lib/server-functions";
 
 export const Navbar = () => {
   const profile: any = useSelector((item: RootState) => item?.profile?.items);
@@ -37,10 +38,7 @@ export const Navbar = () => {
 
   const logout = async () => {
     try {
-      await fetch("/api/logout", {
-        method: "POST",
-        body: JSON.stringify({ uid: profile?.uid }),
-      });
+      updateUserInfo({uid: profile?.uid})
       dispatch(clearProfile());
       dispatch(clearClients());
       dispatch(clearCalendar());

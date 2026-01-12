@@ -27,6 +27,7 @@ import {
 } from "@/components/shadcnUI/ui/select";
 import { db } from "@/config/firebase";
 import { getTemplateMail } from "@/lib/utils";
+import { sendMail } from "@/lib/server-functions";
 
 interface IProps {
   children: React.ReactNode;
@@ -116,16 +117,13 @@ export function AddEventDialog({ children }: IProps) {
           lientMeet: "https//:www.google.com",
         },
       });
-
-      await fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await sendMail(
+        {
           to: selectedClientInfo?.email,
           subject: selectedClientInfo?.object,
           html: template,
-        }),
-      });
+        }
+      )
 
       alert("Event added successfuly");
     } catch (error) {

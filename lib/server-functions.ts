@@ -1,9 +1,12 @@
 "use server";
 import { cookies } from "next/headers";
 
-import { adminDb } from "@/config/firebase-admin.init";
+import { adminAuth, adminDb } from "@/config/firebase-admin.init";
 import { AppUser } from "@/types";
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
+export const runtime = "nodejs";
 export const saveToken = async ({ token }: any) => {
   (await cookies())?.set("token", token, {
     httpOnly: true,
@@ -78,3 +81,48 @@ export const getClients = async (): Promise<AppUser[]> => {
 
   return users;
 };
+
+export const updateUserInfo = async ({uid}: {uid: string}) => {
+  try {
+    await adminAuth.updateUser(uid, { emailVerified: false });
+    await removeToken();
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error?.message || "Server error" },
+      { status: 500 },
+    );
+  }
+}
+
+export const sendMail = async ({ to, subject, html }: any) => {
+  try {
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"Mohamed Amine LAZREG – Développeur FullStack JS" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error(err);
+
+    return NextResponse.json(
+      { success: false, error: (err as Error).message },
+      { status: 500 },
+    );
+  }
+}
