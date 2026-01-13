@@ -44,13 +44,15 @@ export const signIn = async (
     );
     const user: any = userCredential.user;
     const token = user.accessToken;
-    dispatch(setToken(token));
-    dispatch(setProfile({ uid: user.uid }));
-    const events = await getCalendar();
-    const users = await getClients();
-    dispatch(setCalendar(events));
-    dispatch(setClients(users));
-    router.replace("/calendar/week-view");
+    if(token){        
+        dispatch(setToken(token));
+        dispatch(setProfile({ uid: user.uid }));
+        const events = await getCalendar();
+        const users = await getClients();
+        dispatch(setCalendar(events));
+        dispatch(setClients(users));
+        router.replace("/calendar/week-view");
+    }
   } catch (error: any) {
     console.error("Firebase sign-in failed:", error);
     // DO NOT crash render
