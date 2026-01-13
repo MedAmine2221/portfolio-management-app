@@ -43,7 +43,8 @@ export const signIn = async (
       password,
     );
     const user: any = userCredential.user;
-    dispatch(setToken(user.accessToken));
+    const token = user.accessToken;
+    dispatch(setToken(token));
     dispatch(setProfile({ uid: user.uid }));
     const events = await getCalendar();
     const users = await getClients();
