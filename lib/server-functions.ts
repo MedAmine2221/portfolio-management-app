@@ -42,6 +42,25 @@ export const getCalendar = async () => {
   return allEvents;
 };
 
+export const deleteEvent = async (
+  contactId: string,
+  eventId: string,
+) => {
+  try {
+    await adminDb
+      .collection("contact")
+      .doc(contactId)
+      .collection("events")
+      .doc(eventId)
+      .delete();
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    throw new Error("Failed to delete event");
+  }
+};
+
+
 export const getClients = async (): Promise<AppUser[]> => {
   const snapshot = await adminDb.collection("contact").get();
   const users = snapshot.docs.map((doc) => {

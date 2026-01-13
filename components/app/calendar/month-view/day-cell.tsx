@@ -10,6 +10,9 @@ import { EventBullet } from "@/components/app/calendar/month-view/event-bullet";
 import { MonthEventBadge } from "@/components/app/calendar/month-view/month-event-badge";
 import { cn } from "@/lib/utils";
 import { getMonthCellEvents } from "@/lib/helpers";
+import { FiTrash, FiTrash2 } from "react-icons/fi";
+import { deleteEvent } from "@/lib/server-functions";
+import { DeleteEventDialog } from "../dialogs/delete-event-dialog";
 
 const MAX_VISIBLE_EVENTS = 3;
 
@@ -66,11 +69,16 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
               {event && (
                 <>
                   <EventBullet className="lg:hidden" color={event.color} />
-                  <MonthEventBadge
-                    cellDate={startOfDay(date)}
-                    className="hidden lg:flex"
-                    event={event}
-                  />
+                  <div className="flex flex-row items-center">
+                    <DeleteEventDialog action={()=>deleteEvent(event.user.id, String(event.id))}>
+                      <FiTrash2 className="mx-2 text-lg font-bold" color="red"/>
+                    </DeleteEventDialog>
+                    <MonthEventBadge
+                      cellDate={startOfDay(date)}
+                      className="hidden lg:flex"
+                      event={event}
+                    />
+                  </div>
                 </>
               )}
             </div>
