@@ -11,9 +11,7 @@ export function ClientContainer({ view }: { view: TCalendarView }) {
   const event: IEvent[] = useSelector(
     (item: RootState) => item.calendar.calendar,
   );
-  const clients = useSelector((item: RootState) => item.clients.clients);
-  console.log(event, " //// ",clients);
-  
+  const clients = useSelector((item: RootState) => item.clients.clients);  
   return (
     <>
       <div className="flex gap-4 justify-center flex-wrap mt-4">
