@@ -51,7 +51,7 @@ export const signIn = async (
         const users = await getClients();
         dispatch(setCalendar(events));
         dispatch(setClients(users));
-        router.replace("/calendar/week-view");
+        router.replace("/calendar/month-view");
     }
   } catch (error: any) {
     console.error("Firebase sign-in failed:", error);

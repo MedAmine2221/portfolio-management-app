@@ -112,7 +112,7 @@ export const Navbar = () => {
       <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3">
         <NextLink
           className="flex flex-row items-center font-bold text-black text-lg tracking-tight hover:text-black transition-colors"
-          href="/calendar/week-view"
+          href="/calendar/agenda-view"
         >
           <Image alt="amine" height={75} src={"/amine.png"} width={75} />
           Mohamed Amine LAZREG
@@ -137,7 +137,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between px-6 py-3">
           <NextLink
             className="font-bold text-black text-lg tracking-tight"
-            href="/calendar/week-view"
+            href="/calendar/month-view"
           >
             <Image alt="amine" height={75} src={"/amine.png"} width={75} />
           </NextLink>

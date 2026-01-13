@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Columns, Plus, Grid2x2, CalendarRange } from "lucide-react";
+import { Plus, Grid2x2, CalendarRange } from "lucide-react";
 
 import { Button } from "@/components/shadcnUI/ui/button";
 import { TodayButton } from "@/components/app/calendar/header/today-button";
@@ -20,20 +20,8 @@ export function CalendarHeader({ view, events }: Props) {
           <div className="inline-flex first:rounded-r-none last:rounded-l-none [&:not(:first-child):not(:last-child)]:rounded-none">
             <Button
               asChild
-              aria-label="View by week"
-              className="-ml-px rounded-r-none [&_svg]:size-5"
-              size="icon"
-              variant={view === "week" ? "default" : "outline"}
-            >
-              <Link href="/calendar/week-view">
-                <Columns strokeWidth={1.8} />
-              </Link>
-            </Button>
-
-            <Button
-              asChild
               aria-label="View by month"
-              className="-ml-px rounded-none [&_svg]:size-5"
+              className="-ml-px rounded-r-none [&_svg]:size-5"
               size="icon"
               variant={view === "month" ? "default" : "outline"}
             >

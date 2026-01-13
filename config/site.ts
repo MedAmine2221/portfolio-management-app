@@ -6,7 +6,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "Home",
-      href: "/calendar/week-view",
+      href: "/calendar/month-view",
     },
     {
       label: "Clients",
@@ -16,7 +16,7 @@ export const siteConfig = {
   navMenuItems: [
     {
       label: "Home",
-      href: "/calendar/week-view",
+      href: "/calendar/month-view",
     },
     {
       label: "Clients",
