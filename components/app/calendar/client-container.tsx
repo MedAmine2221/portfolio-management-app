@@ -6,12 +6,19 @@ import { CalendarClient } from "./calendar-client";
 import { TCalendarView } from "@/types";
 import { RootState } from "@/redux/store";
 import { IEvent } from "@/types/interfaces";
+import { useMemo } from "react";
 
 export function ClientContainer({ view }: { view: TCalendarView }) {
   const event: IEvent[] = useSelector(
     (item: RootState) => item.calendar.calendar,
   );
-  const clients = useSelector((item: RootState) => item.clients.clients);  
+  const clients = useSelector((item: RootState) => item.clients.clients);
+  const eventList = useMemo(()=>{
+    return event
+  },[event]);
+  const clientList = useMemo(()=>{
+    return clients
+  },[clients]);
   return (
     <>
       <div className="flex gap-4 justify-center flex-wrap mt-4">
@@ -21,7 +28,7 @@ export function ClientContainer({ view }: { view: TCalendarView }) {
             Number of customers :
           </p>
           <p className="text-2xl font-bold text-[#1a7ef0]">
-            {clients.length > 0 ? clients.length : "pas des client"}
+            {clientList.length > 0 ? clientList.length : "pas des client"}
           </p>
         </div>
 
@@ -35,7 +42,7 @@ export function ClientContainer({ view }: { view: TCalendarView }) {
       </div>
 
       <div className="mt-6">
-        <CalendarClient events={event} view={view} />
+        <CalendarClient events={eventList} view={view} />
       </div>
     </>
   );
