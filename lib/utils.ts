@@ -28,34 +28,37 @@ export function NameAbreviation(lastName: string, firstName: string) {
   return result;
 }
 
-export const signIn = async (data: any, dispatch: AppDispatch, router: any) => {
-  try {
-    dispatch(setLoadingTrue());
-    const { email, password } = data;
+export const signIn = async (
+  data: any,
+  dispatch: AppDispatch,
+  router: any
+) => {
+  dispatch(setLoadingTrue());
 
+  try {
+    const { email, password } = data;
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password,
     );
-
     const user: any = userCredential.user;
-
-    const token = user?.accessToken;
-    dispatch(setToken({token}));
+    dispatch(setToken({ token: user.accessToken }));
     dispatch(setProfile({ uid: user.uid }));
     const events = await getCalendar();
     const users = await getClients();
     dispatch(setCalendar(events));
     dispatch(setClients(users));
-      router.replace("/calendar/week-view");
+    router.replace("/calendar/week-view");
   } catch (error: any) {
-    console.error("Error signing in:", error.message);
-    alert(error.message);
+    console.error("Firebase sign-in failed:", error);
+    // DO NOT crash render
+    alert(error?.message ?? "Login failed");
   } finally {
     dispatch(setLoadingFalse());
   }
 };
+
 
 export const getTemplateMail = ({ data }: any) => {
   return `

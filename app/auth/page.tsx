@@ -1,4 +1,3 @@
-"use client";
 import { FiFacebook, FiLinkedin, FiInstagram } from "react-icons/fi";
 import Image from "next/image";
 import { Link } from "@heroui/link";

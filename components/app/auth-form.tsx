@@ -38,18 +38,14 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = (data: any) => {
-    try {
-      signIn(
-        {
-          email: data.email,
-          password: data.password,
-        },
-        dispatch,
-        router,
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    signIn(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      dispatch,
+      router,
+    );
   };
 
   return (
