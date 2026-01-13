@@ -1,33 +1,8 @@
-"use server";
-import { cookies } from "next/headers";
-
-import { adminAuth, adminDb } from "@/config/firebase-admin.init";
+"use server";;
+import { adminDb } from "@/config/firebase-admin.init";
 import { AppUser } from "@/types";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-
-export const saveToken = async ({ token }: any) => {
-  (await cookies())?.set("token", token, {
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-    path: "/",
-    sameSite: "strict",
-  });
-};
-
-export const getToken = async () => {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token");
-  const tokenValue = token?.value;
-
-  return tokenValue;
-};
-
-export const removeToken = async () => {
-  const cookieStore = cookies();
-
-  (await cookieStore).delete("token");
-};
 
 export const getCalendar = async () => {
   const contactsSnapshot = await adminDb.collection("contact").get();
