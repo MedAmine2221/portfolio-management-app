@@ -13,6 +13,7 @@ import loginSchema from "@/schema/auth";
 import { signIn } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
+
 export default function AuthForm() {
   const loading = useSelector((item: RootState) => item?.loading?.loading);
   const auth = useSelector((item: RootState) => item?.auth.auth);
@@ -37,7 +38,7 @@ export default function AuthForm() {
   }, [watch("password")]);
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
-  const submit = (data: any) => {
+  const submit = async (data: any) => {
     signIn(
       {
         email: data.email,
@@ -46,6 +47,8 @@ export default function AuthForm() {
       dispatch,
       router,
     );
+    // window.open(data.meetLink, "_blank");
+    
   };
 
   return (

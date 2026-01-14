@@ -1,6 +1,5 @@
 "use server";;
 import { adminDb } from "@/config/firebase-admin.init";
-import { AppUser } from "@/types";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
@@ -42,6 +41,36 @@ export const getCalendar = async () => {
   return allEvents;
 };
 
+
+export const getCalendarByContactId = async (id: string) => {
+  const contactsSnapshot = await adminDb
+    .collection("contact")
+    .doc(id)
+    .get();
+  const allEvents: any[] = [];
+
+    const contactData = contactsSnapshot.data();
+    const eventsSnapshot = await adminDb
+      .collection("contact")
+      .doc(id)
+      .collection("events")
+      .get();
+    eventsSnapshot.docs.forEach((eventDoc, index) => {
+      const eventData = eventDoc.data();      
+      allEvents.push({
+        id: eventDoc.id,
+        title: contactData?.object || "",
+        description: contactData?.message || "",
+        startDate: eventData.startDate,
+        endDate: eventData.endDate,
+        progress: "to do",
+        color: "blue",
+      });
+    });
+
+  return allEvents;
+};
+
 export const deleteEvent = async (
   contactId: string,
   eventId: string,
@@ -59,21 +88,51 @@ export const deleteEvent = async (
     throw new Error("Failed to delete event");
   }
 };
+export type Client = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  object: string;
+  message: string;
+  createdAt: string;
+  progress: "to do" | "in progress" | "done";
+  userEventsInfo: any[];
+};
 
 
-export const getClients = async (): Promise<AppUser[]> => {
+export const getClients = async (): Promise<Client[]> => {
   const snapshot = await adminDb.collection("contact").get();
-  const users = snapshot.docs.map((doc) => {
-    const data = doc.data() as Omit<AppUser, "id">;
 
-    return {
-      id: doc.id,
-      ...data,
-    };
-  });
+  const users = await Promise.all(
+    snapshot.docs.map(async (doc) => {
+      const data = doc.data() as Omit<Client, "id" | "userEventsInfo">;
+      const userEventsInfo = await getCalendarByContactId(doc.id);
+
+      return {
+        id: doc.id,
+        ...data,
+        userEventsInfo,
+      };
+    })
+  );
 
   return users;
 };
+
+
+export const getClientById = async (id: string): Promise<any | null> => {  
+  const docRef = adminDb.collection("contact").doc(id);  
+  const docSnap = await docRef.get();
+
+  if (!docSnap.exists) {
+    return null;
+  }
+
+  const data = docSnap.data() as Omit<Client, "id" | "userEventsInfo">;  
+  return data
+};
+
 
 export const sendMail = async ({ to, subject, html }: any) => {
   try {

@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import { useMemo, useState } from "react";
 import { Calendar, Clock, User } from "lucide-react";
 import { Button as HerouiButton } from "@heroui/button";
@@ -26,9 +26,10 @@ import {
   SelectValue,
 } from "@/components/shadcnUI/ui/select";
 import { db } from "@/config/firebase";
-import { getTemplateMail } from "@/lib/utils";
-import { sendMail } from "@/lib/server-functions";
-
+import { addMeetingLink, getTemplateMail } from "@/lib/utils";
+import { getClientById, sendMail } from "@/lib/server-functions";
+import { signIn, useSession } from "next-auth/react";
+import { SiGooglemeet } from "react-icons/si";
 interface IProps {
   children: React.ReactNode;
 }
@@ -48,6 +49,21 @@ const months = [
 ];
 
 export function AddEventDialog({ children }: IProps) {
+    const {
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+    clearErrors,
+    watch
+  } = useForm({
+    resolver: yupResolver(eventSchema),
+    defaultValues: {
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+    },
+  });
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
@@ -57,20 +73,13 @@ export function AddEventDialog({ children }: IProps) {
       label: item.firstName + " " + item.lastName,
     }));
   }, [clientsList]);
+  const start = useMemo(() => {
+    return watch("startDate")
+  }, [watch("startDate")]);
+  const end = useMemo(() => {
+    return watch("endDate")
+  }, [watch("endDate")]);
 
-  const {
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-    clearErrors,
-  } = useForm({
-    resolver: yupResolver(eventSchema),
-    defaultValues: {
-      startDate: new Date().toISOString(),
-      endDate: new Date().toISOString(),
-    },
-  });
 
   const resetForm = () => {
     const now = new Date().toISOString();
@@ -83,16 +92,25 @@ export function AddEventDialog({ children }: IProps) {
     clearErrors();
   };
 
+  const clientInfo = useMemo(async () => {
+    let result: any = null;
+    if (selectedClient) {
+      result = await getClientById(selectedClient)
+    }
+    return {
+      object: result?.object,
+      message: result?.message,
+      email: result?.email,
+    };
+  }, [selectedClient]);  
   const onSubmit = async (data: any) => {
     if (!selectedClient) {
       alert("select client");
 
       return;
     }
-
     try {
       const eventRef = collection(db, "contact", selectedClient, "events");
-
       await addDoc(eventRef, {
         startDate: data.startDate,
         endDate: data.endDate,
@@ -198,7 +216,23 @@ export function AddEventDialog({ children }: IProps) {
               }}
             />
           </div>
-
+            <HerouiButton onPress={async ()=> await addMeetingLink(
+              {
+                title: (await clientInfo).object || "",
+                description: (await clientInfo).message || "",
+                startDate: start,
+                endDate: end,
+                attendees: [
+                  "amine.dev.lazreg@gmail.com",
+                  (await clientInfo).email,
+                ],
+                session,
+                signIn
+              }
+            )} className="bg-amber-500 text-white text-lg font-bold">
+              <SiGooglemeet size={20} />
+              Add Meeting Link
+            </HerouiButton>
           <DialogFooter className="mt-4 flex justify-end gap-2">
             <HerouiButton type="submit">Save</HerouiButton>
           </DialogFooter>

@@ -48,7 +48,7 @@ export const signIn = async (
         dispatch(setToken(token));
         dispatch(setProfile({ uid: user.uid }));
         const events = await getCalendar();
-        const users = await getClients();
+        const users = await getClients();        
         dispatch(setCalendar(events));
         dispatch(setClients(users));
         router.replace("/calendar/month-view");
@@ -354,3 +354,44 @@ export const getTemplateMail = ({ data }: any) => {
       </html>
   `;
 };
+
+
+
+export const addMeetingLink = async ({
+    title,
+    description,
+    startDate,
+    endDate,
+    attendees,
+    session,
+    signIn
+}: any) => {
+
+    if (!session) {
+      await signIn("google");
+      return;
+    }
+
+    // Connecté → créer Google Meet
+    const res = await fetch("/api/create-meet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        startDate,
+        endDate,
+        attendees,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data.error);
+      return;
+    }
+
+    console.log("Google Meet link:", data.meetLink);
+}
