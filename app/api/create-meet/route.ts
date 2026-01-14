@@ -58,10 +58,11 @@ export async function POST(req: Request) {
 
     const response = await calendar.events.insert({
       calendarId: "primary",
-      resource: event,
       conferenceDataVersion: 1,
-      sendUpdates: "all", // باش يبعث invites لل participants
+      sendUpdates: "all",
+      requestBody: event,
     });
+
 
     return new Response(
       JSON.stringify({
