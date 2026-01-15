@@ -1,6 +1,6 @@
-import { authOptions } from "@/config/nextAuth";
 import { google } from "googleapis";
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
