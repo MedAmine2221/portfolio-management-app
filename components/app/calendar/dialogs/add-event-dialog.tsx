@@ -226,7 +226,6 @@ export function AddEventDialog({ children }: IProps) {
                   startDate: start,
                   endDate: end,
                   attendees: [
-                    "amine.dev.lazreg@gmail.com",
                     (await clientInfo).email,
                   ],
                   session,
