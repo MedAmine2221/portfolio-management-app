@@ -29,7 +29,6 @@ import { db } from "@/config/firebase";
 import { addMeetingLink, getTemplateMail } from "@/lib/utils";
 import { getClientById, sendMail } from "@/lib/server-functions";
 import { signIn, useSession } from "next-auth/react";
-import { SiGooglemeet } from "react-icons/si";
 import { monthsList } from "@/constants";
 import { ChildrenProps } from "@/types/interfaces";
 
@@ -52,7 +51,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
-  const [meetingInfo, setMeetingInfo] = useState<{meetLink: string, eventId: string} | null>(null);
   const clientOptions = useMemo(() => {
     return clientsList.map((item: any) => ({
       key: String(item.id),
@@ -96,42 +94,57 @@ export function AddEventDialog({ children }: ChildrenProps) {
       return;
     }
     try {
-      const eventRef = collection(db, "contact", selectedClient, "events");
-      await addDoc(eventRef, {
-        startDate: data.startDate,
-        endDate: data.endDate,
-        progress: "to do",
-        meetingLink: meetingInfo?.meetLink || "",
-        meetingGoogleId: meetingInfo?.eventId || "",
-        createdAt: new Date().toISOString(),
-      });
-      const selectedClientInfo: any = clientsList.find(
-        (item: any) => item?.id === selectedClient,
+      const info = await addMeetingLink(
+        {
+          title: (await clientInfo).object || "",
+          description: (await clientInfo).message || "",
+          startDate: start,
+          endDate: end,
+          attendees: [
+            (await clientInfo).email,
+          ],
+          session,
+          signIn
+        }
       );
-      const template = getTemplateMail({
-        data: {
-          client:
+
+      if(info?.meetLink && info?.eventId) {        
+        const eventRef = collection(db, "contact", selectedClient, "events");
+        await addDoc(eventRef, {
+          startDate: data.startDate,
+          endDate: data.endDate,
+          progress: "to do",
+          meetingLink: info?.meetLink || "",
+          meetingGoogleId: info?.eventId || "",
+          createdAt: new Date().toISOString(),
+        });
+        const selectedClientInfo: any = clientsList.find(
+          (item: any) => item?.id === selectedClient,
+        );
+        const template = getTemplateMail({
+          data: {
+            client:
             selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
-          date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
-          startDate:
+            date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+            startDate:
             new Date(data.startDate).getHours() +
             "h:" +
             new Date(data.startDate).getMinutes() +
             "min",
-          object: selectedClientInfo?.object,
-          lienMeet: meetingInfo?.meetLink || "",
-        },
-      });
-      
-      await sendMail(
-        {
-          to: selectedClientInfo?.email,
-          subject: selectedClientInfo?.object,
-          html: template,
-        }
-      )
-
-      alert("Event added successfuly");
+            object: selectedClientInfo?.object,
+            lienMeet: info?.meetLink || "",
+          },
+        });
+        
+        await sendMail(
+          {
+            to: selectedClientInfo?.email,
+            subject: selectedClientInfo?.object,
+            html: template,
+          }
+        ) 
+        alert("Event added successfuly");
+      }
     } catch (error) {
       console.error(error);
       alert("error whene adding event");
@@ -203,27 +216,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
               }}
             />
           </div>
-            <HerouiButton onPress={async ()=> {
-              const info = await addMeetingLink(
-                {
-                  title: (await clientInfo).object || "",
-                  description: (await clientInfo).message || "",
-                  startDate: start,
-                  endDate: end,
-                  attendees: [
-                    (await clientInfo).email,
-                  ],
-                  session,
-                  signIn
-                }
-              );
-              if (info) {
-                setMeetingInfo(info);
-              }
-            }} className="bg-amber-500 text-white text-lg font-bold">
-              <SiGooglemeet size={20} />
-              Add Meeting Link
-            </HerouiButton>
           <DialogFooter className="mt-4 flex justify-end gap-2">
             <HerouiButton type="submit">Save</HerouiButton>
           </DialogFooter>
