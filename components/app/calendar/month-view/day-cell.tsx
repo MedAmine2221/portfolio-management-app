@@ -8,10 +8,10 @@ import { isToday, startOfDay } from "date-fns";
 import { useCalendar } from "@/contexts/calendar-context";
 import { EventBullet } from "@/components/app/calendar/month-view/event-bullet";
 import { MonthEventBadge } from "@/components/app/calendar/month-view/month-event-badge";
-import { cn } from "@/lib/utils";
+import { cn, deleteMeetingLink, getCancelTemplateMail } from "@/lib/utils";
 import { getMonthCellEvents } from "@/lib/helpers";
-import { FiTrash, FiTrash2 } from "react-icons/fi";
-import { deleteEvent } from "@/lib/server-functions";
+import { FiTrash2 } from "react-icons/fi";
+import { deleteEvent, sendMail } from "@/lib/server-functions";
 import { DeleteEventDialog } from "../dialogs/delete-event-dialog";
 
 const MAX_VISIBLE_EVENTS = 3;
@@ -32,7 +32,20 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
     setSelectedDate(date);
     push("/day-view");
   };
-
+  const months = [
+    "Jan",
+    "Fév",
+    "Mar",
+    "Avr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Aoû",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Déc",
+  ];
   return (
     <div
       className={cn(
@@ -70,7 +83,34 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
                 <>
                   <EventBullet className="lg:hidden" color={event.color} />
                   <div className="flex flex-row items-center">
-                    <DeleteEventDialog action={()=>deleteEvent(event.user.id, String(event.id))}>
+                    <DeleteEventDialog action={async ()=>{
+                      deleteEvent(event.user.id, String(event.id))
+                      if(event.meetingGoogleId){                        
+                        await deleteMeetingLink({
+                          eventId: event.meetingGoogleId
+                        });
+                      }
+                      const template = getCancelTemplateMail({
+                        data: {
+                          client: event.user.name,
+                          date: `${new Date(event.startDate).getDay()} ${months[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
+                          startDate:
+                            new Date(event.startDate).getHours() +
+                            "h:" +
+                            new Date(event.startDate).getMinutes() +
+                            "min",
+                          object: event.title,
+                          reason: "Meeting cancelled",
+                        },
+                      });
+                      await sendMail(
+                        {
+                          to: event.user.email,
+                          subject: event.title,
+                          html: template,
+                        }
+                      )
+                    }}>
                       <FiTrash2 className="mx-2 text-lg font-bold" color="red"/>
                     </DeleteEventDialog>
                     <MonthEventBadge

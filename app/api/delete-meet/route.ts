@@ -12,7 +12,8 @@ export async function DELETE(req: Request) {
   }
 
   const { eventId } = await req.json();
-
+  console.log("Deleting event with ID:", eventId);
+  
   if (!eventId) {
     return new Response(JSON.stringify({ error: "eventId is required" }), {
       status: 400,
