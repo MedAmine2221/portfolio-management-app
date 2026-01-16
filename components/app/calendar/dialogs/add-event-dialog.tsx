@@ -67,6 +67,7 @@ export function AddEventDialog({ children }: IProps) {
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
+  const [meetingInfo, setMeetingInfo] = useState<{meetLink: string, eventId: string} | null>(null);
   const clientOptions = useMemo(() => {
     return clientsList.map((item: any) => ({
       key: String(item.id),
@@ -115,7 +116,8 @@ export function AddEventDialog({ children }: IProps) {
         startDate: data.startDate,
         endDate: data.endDate,
         progress: "to do",
-        lientMeet: "https//:www.google.com",
+        meetingLink: meetingInfo?.meetLink || "",
+        meetingGoogleId: meetingInfo?.eventId || "",
         createdAt: new Date().toISOString(),
       });
       const selectedClientInfo: any = clientsList.find(
@@ -132,9 +134,10 @@ export function AddEventDialog({ children }: IProps) {
             new Date(data.startDate).getMinutes() +
             "min",
           object: selectedClientInfo?.object,
-          lientMeet: "https//:www.google.com",
+          lienMeet: meetingInfo?.meetLink || "",
         },
       });
+      
       await sendMail(
         {
           to: selectedClientInfo?.email,
@@ -194,7 +197,6 @@ export function AddEventDialog({ children }: IProps) {
               type="datetime-local"
               onChange={(e) => {
                 const isoString = new Date(e.target.value).toISOString();
-
                 setValue("startDate", isoString, { shouldValidate: true });
               }}
             />
@@ -216,20 +218,25 @@ export function AddEventDialog({ children }: IProps) {
               }}
             />
           </div>
-            <HerouiButton onPress={async ()=> await addMeetingLink(
-              {
-                title: (await clientInfo).object || "",
-                description: (await clientInfo).message || "",
-                startDate: start,
-                endDate: end,
-                attendees: [
-                  "amine.dev.lazreg@gmail.com",
-                  (await clientInfo).email,
-                ],
-                session,
-                signIn
+            <HerouiButton onPress={async ()=> {
+              const info = await addMeetingLink(
+                {
+                  title: (await clientInfo).object || "",
+                  description: (await clientInfo).message || "",
+                  startDate: start,
+                  endDate: end,
+                  attendees: [
+                    "amine.dev.lazreg@gmail.com",
+                    (await clientInfo).email,
+                  ],
+                  session,
+                  signIn
+                }
+              );
+              if (info) {
+                setMeetingInfo(info);
               }
-            )} className="bg-amber-500 text-white text-lg font-bold">
+            }} className="bg-amber-500 text-white text-lg font-bold">
               <SiGooglemeet size={20} />
               Add Meeting Link
             </HerouiButton>

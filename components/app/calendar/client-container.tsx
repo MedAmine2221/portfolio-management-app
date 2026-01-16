@@ -16,6 +16,7 @@ export function ClientContainer({ view }: { view: TCalendarView }) {
   const eventList = useMemo(()=>{
     return event
   },[event]);
+  
   const clientList = useMemo(()=>{
     return clients
   },[clients]);

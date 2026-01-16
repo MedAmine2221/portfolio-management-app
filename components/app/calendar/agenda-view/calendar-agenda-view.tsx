@@ -10,6 +10,7 @@ import { useCalendar } from "@/contexts/calendar-context";
 import { ScrollArea } from "@/components/shadcnUI/ui/scroll-area";
 
 export function CalendarAgendaView({ Events }: IProps) {
+  
   const { selectedDate } = useCalendar();
 
   const eventsByDay = useMemo(() => {

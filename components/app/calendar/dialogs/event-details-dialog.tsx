@@ -21,8 +21,9 @@ import {
   DialogTrigger,
 } from "@/components/shadcnUI/ui/dialog";
 import { Button } from "@/components/shadcnUI/ui/button";
-import { getTemplateMail } from "@/lib/utils";
+import { getTemplateMail, updateMeetingLink } from "@/lib/utils";
 import { sendMail } from "@/lib/server-functions";
+import { SiGooglemeet } from "react-icons/si";
 
 interface IProps {
   event: IEvent;
@@ -52,6 +53,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
     () => event.endDate || new Date().toISOString(),
   );
   const [open, setOpen] = useState(false);
+  const [meetingInfo, setMeetingInfo] = useState<any | null>(null);  
   const {
     reset,
     handleSubmit,
@@ -207,6 +209,19 @@ export function EventDetailsDialog({ event, children }: IProps) {
                     }}
                   />
                 </div>
+                <HerouiButton onPress={async () => {                  
+                  const info = (await updateMeetingLink({
+                    eventId: event.meetingGoogleId || "",
+                    startDate: start,
+                    endDate: end,
+                  })) as any;
+                  if (info) {
+                    setMeetingInfo(info);
+                  }
+                }} className="bg-amber-500 text-white text-lg font-bold">
+                  <SiGooglemeet size={20} />
+                  Update Meeting Link
+                </HerouiButton>
                 {isEditOpen && (
                   <>
                     <div className="flex items-start gap-2">

@@ -14,6 +14,8 @@ export interface IEvent {
   title: string;
   color: TEventColor;
   description: string;
+  meetingGoogleId: string;
+  meetingLink: string;
   user: IUser;
 }
 

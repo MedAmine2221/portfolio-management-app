@@ -46,9 +46,7 @@ export default function AuthForm() {
       },
       dispatch,
       router,
-    );
-    // window.open(data.meetLink, "_blank");
-    
+    );    
   };
 
   return (

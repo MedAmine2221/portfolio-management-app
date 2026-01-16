@@ -27,7 +27,8 @@ export const getCalendar = async () => {
         endDate: eventData.endDate,
         progress: "to do",
         color: "blue",
-
+        meetingGoogleId: eventData.meetingGoogleId || "",
+        meetingLink: eventData.meetingLink || "",
         user: {
           id: contactDoc.id,
           name: `${contactData.lastName} ${contactData.firstName}`,

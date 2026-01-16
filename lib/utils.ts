@@ -355,7 +355,33 @@ export const getTemplateMail = ({ data }: any) => {
   `;
 };
 
+export const updateMeetingLink = async ({
+    eventId,
+    startDate,
+    endDate,
+}: any) =>{
+    await fetch("/api/update-meet", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            eventId,
+            startDate,
+            endDate,
+        }),
+    });
 
+}
+
+export const deleteMeetingLink = async ({
+    eventId,
+}: any) =>{
+    await fetch("/api/delete-meet", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ eventId }),
+    });
+
+}
 
 export const addMeetingLink = async ({
     title,
@@ -372,7 +398,6 @@ export const addMeetingLink = async ({
       return;
     }
 
-    // Connecté → créer Google Meet
     const res = await fetch("/api/create-meet", {
       method: "POST",
       headers: {
@@ -392,6 +417,8 @@ export const addMeetingLink = async ({
       console.error(data.error);
       return;
     }
-
-    console.log("Google Meet link:", data.meetLink);
+    return {
+        meetLink: data.meetLink,
+        eventId: data.eventId,
+    }
 }
