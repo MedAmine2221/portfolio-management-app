@@ -7,11 +7,10 @@ import { ReduxProviders } from "./redux-provider";
 
 import ChangePathProvider from "./change-path-provider";
 import { SessionProvider } from "next-auth/react";
+import { ChildrenProps } from "@/types/interfaces";
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: ChildrenProps) {
   return (
     <html suppressHydrationWarning lang="en">
       <head />

@@ -732,7 +732,6 @@ export const updateMeetingLink = async ({
 export const deleteMeetingLink = async ({
     eventId,
 }: any) =>{
-    console.log("Deleting meeting link for eventId:", eventId);
     await fetch("/api/delete-meet", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },

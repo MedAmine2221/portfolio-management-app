@@ -6,12 +6,11 @@ import { ReactNode, useEffect } from "react";
 
 import { RootState } from "@/redux/store";
 import { signIn } from "@/lib/utils";
+import { ChildrenProps } from "@/types/interfaces";
 
 export default function ChangePathProvider({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: ChildrenProps) {
   const router = useRouter();
   const pathname = usePathname();
   const auth = useSelector((item: RootState) => item.auth.auth);

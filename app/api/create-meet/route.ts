@@ -13,7 +13,6 @@ export async function POST(req: Request) {
   }
 
   const { title, description, startDate, endDate, attendees } = await req.json();
-  // console.log(title, description, startDate, endDate, attendees);
   
   const authClient = new google.auth.OAuth2();
   authClient.setCredentials({

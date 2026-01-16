@@ -50,7 +50,6 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
   });
   const resetForm = () => {
     const now = new Date().toISOString();
-
     reset({
       startDate: now,
       endDate: now,
@@ -115,6 +114,15 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
     }
   };
 
+  const onCancel = () => {
+    setIsEditOpen(false);
+    // Reset to original values
+    setStart(event?.startDate || new Date().toISOString());
+    setEnd(event?.endDate || new Date().toISOString());
+    setOpen(false);
+    clearErrors();
+  }
+
   const startDateObj = useMemo(() => {
     const d = new Date(start);
 
@@ -163,7 +171,6 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
                     }
                     onChange={(e) => {
                       const isoString = new Date(e.target.value).toISOString();
-
                       setStart(isoString);
                       setValue("startDate", isoString, {
                         shouldValidate: true,
@@ -216,14 +223,7 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
                     <DialogFooter className="mt-4 flex justify-end gap-2">
                       <HerouiButton
                         variant="bordered"
-                        onPress={() => {
-                          setIsEditOpen(false);
-                          // Reset to original values
-                          setStart(event?.startDate || new Date().toISOString());
-                          setEnd(event?.endDate || new Date().toISOString());
-                          setOpen(false);
-                          clearErrors();
-                        }}
+                        onPress={onCancel}
                       >
                         Cancel
                       </HerouiButton>

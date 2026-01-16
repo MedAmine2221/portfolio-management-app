@@ -3,19 +3,25 @@ import { useState } from "react";
 import { Button as HerouiButton } from "@heroui/button";
 
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/shadcnUI/ui/dialog";
 import { DeleteEventProps } from "@/types/interfaces";
 
 
 export function DeleteEventDialog({ action, children }: DeleteEventProps) {
   const [open, setOpen] = useState(false);
-
+  const onCancel = () => {
+    setOpen(false);
+  };
+  const onDelete = () => {
+    action();
+    setOpen(false);
+  }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -24,13 +30,10 @@ export function DeleteEventDialog({ action, children }: DeleteEventProps) {
           <DialogTitle>Are you sure you wont to delete this event</DialogTitle>
         </DialogHeader>
         <DialogFooter className="mt-4 flex justify-end gap-2">
-          <HerouiButton className="bg-white border-2 border-red-500 text-red-500" onPress={()=>setOpen(false)}>Cancel</HerouiButton>
+          <HerouiButton className="bg-white border-2 border-red-500 text-red-500" onPress={onCancel}>Cancel</HerouiButton>
           <HerouiButton 
             className="bg-red-500 text-white" 
-            onPress={()=>{
-                action();
-                setOpen(false);
-            }}
+            onPress={onDelete}
           >
             Delete
           </HerouiButton>
