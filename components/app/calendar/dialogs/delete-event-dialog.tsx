@@ -10,27 +10,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/shadcnUI/ui/dialog";
+import { DeleteEventProps } from "@/types/interfaces";
 
-interface IProps {
-  children: React.ReactNode;
-  action: ()=> void
-}
-const months = [
-  "Jan",
-  "Fév",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Aoû",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Déc",
-];
 
-export function DeleteEventDialog({ action, children }: IProps) {
+export function DeleteEventDialog({ action, children }: DeleteEventProps) {
   const [open, setOpen] = useState(false);
 
   return (

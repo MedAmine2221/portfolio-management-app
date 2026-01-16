@@ -30,25 +30,10 @@ import { addMeetingLink, getTemplateMail } from "@/lib/utils";
 import { getClientById, sendMail } from "@/lib/server-functions";
 import { signIn, useSession } from "next-auth/react";
 import { SiGooglemeet } from "react-icons/si";
-interface IProps {
-  children: React.ReactNode;
-}
-const months = [
-  "Jan",
-  "Fév",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Aoû",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Déc",
-];
+import { monthsList } from "@/constants";
+import { ChildrenProps } from "@/types/interfaces";
 
-export function AddEventDialog({ children }: IProps) {
+export function AddEventDialog({ children }: ChildrenProps) {
     const {
     handleSubmit,
     reset,
@@ -127,7 +112,7 @@ export function AddEventDialog({ children }: IProps) {
         data: {
           client:
             selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
-          date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+          date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
           startDate:
             new Date(data.startDate).getHours() +
             "h:" +

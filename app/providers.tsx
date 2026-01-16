@@ -1,14 +1,7 @@
-"use client";
-import type { ThemeProviderProps } from "next-themes";
-
-import * as React from "react";
+"use client";;
+import { ChildrenProps } from "@/types/interfaces";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
-
-export interface ProvidersProps {
-  children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
-}
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -18,7 +11,7 @@ declare module "@react-types/shared" {
   }
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: ChildrenProps) {
   const router = useRouter();
 
   return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>;

@@ -6,8 +6,7 @@ import { DayCell } from "./day-cell";
 
 import { useCalendar } from "@/contexts/calendar-context";
 import { getCalendarCells, calculateMonthEventPositions } from "@/lib/helpers";
-
-const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+import { WEEK_DAYS } from "@/constants";
 
 export function CalendarMonthView({ Events }: IProps) {
   const { selectedDate } = useCalendar();

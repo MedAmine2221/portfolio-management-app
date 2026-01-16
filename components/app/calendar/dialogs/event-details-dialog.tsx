@@ -1,5 +1,5 @@
 "use client";
-import type { IEvent } from "@/types/interfaces";
+import type { ChildrenProps, IEvent } from "@/types/interfaces";
 
 import { useMemo, useState } from "react";
 import { format, isValid } from "date-fns";
@@ -24,36 +24,17 @@ import { Button } from "@/components/shadcnUI/ui/button";
 import { getTemplateMail, updateMeetingLink } from "@/lib/utils";
 import { sendMail } from "@/lib/server-functions";
 import { SiGooglemeet } from "react-icons/si";
+import { monthsList } from "@/constants";
 
-interface IProps {
-  event: IEvent;
-  children: React.ReactNode;
-}
-const months = [
-  "Jan",
-  "Fév",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Aoû",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Déc",
-];
-
-export function EventDetailsDialog({ event, children }: IProps) {
+export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [start, setStart] = useState(
-    () => event.startDate || new Date().toISOString(),
+    () => event?.startDate || new Date().toISOString(),
   );
   const [end, setEnd] = useState(
-    () => event.endDate || new Date().toISOString(),
+    () => event?.endDate || new Date().toISOString(),
   );
   const [open, setOpen] = useState(false);
-  const [meetingInfo, setMeetingInfo] = useState<any | null>(null);  
   const {
     reset,
     handleSubmit,
@@ -63,8 +44,8 @@ export function EventDetailsDialog({ event, children }: IProps) {
   } = useForm({
     resolver: yupResolver(eventSchema),
     defaultValues: {
-      startDate: event.startDate || new Date().toISOString(),
-      endDate: event.endDate || new Date().toISOString(),
+      startDate: event?.startDate || new Date().toISOString(),
+      endDate: event?.endDate || new Date().toISOString(),
     },
   });
   const resetForm = () => {
@@ -79,50 +60,52 @@ export function EventDetailsDialog({ event, children }: IProps) {
 
   const onSubmit = async (data: any) => {
     try {
-      const ancienne_date = `${new Date(event.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`;
-      const eventRef = doc(
-        db,
-        "contact",
-        String(event.user.id),
-        "events",
-        String(event.id),
-      );
+      if(event){
+          const ancienne_date = `${new Date(event?.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(event?.startDate).getFullYear()}`;
+          const eventRef = doc(
+          db,
+          "contact",
+          String(event?.user.id),
+          "events",
+          String(event?.id),
+        );
 
-      await updateDoc(eventRef, {
-        startDate: data.startDate,
-        endDate: data.endDate,
-        lienMeet: "https//:www.google.com",
-        updatedAt: new Date().toISOString(),
-      });
+        await updateDoc(eventRef, {
+          startDate: data.startDate,
+          endDate: data.endDate,
+          lienMeet: "https//:www.google.com",
+          updatedAt: new Date().toISOString(),
+        });
 
-      const template = getTemplateMail({
-        data: {
-          client: event.user.name,
-          date: `${new Date(data.startDate).getDay()} ${months[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
-          startDate:
-            new Date(data.startDate).getHours() +
-            "h:" +
-            new Date(data.startDate).getMinutes() +
-            "min",
-          object: event.title,
-          ancienne_date: ancienne_date,
-          edit: true,
-          lientMeet: "https//:www.google.com",
-        },
-      });
-      await sendMail(
-        {
-          to: event.user.email,
-          subject: event.title,
-          html: template,
-        }
-      )
-      setStart(data.startDate);
-      setEnd(data.endDate);
+        const template = getTemplateMail({
+          data: {
+            client: event?.user.name,
+            date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+            startDate:
+              new Date(data.startDate).getHours() +
+              "h:" +
+              new Date(data.startDate).getMinutes() +
+              "min",
+              object: event?.title,
+            ancienne_date: ancienne_date,
+            edit: true,
+            lientMeet: "https//:www.google.com",
+          },
+        });
+        await sendMail(
+          {
+            to: event?.user.email,
+            subject: event?.title,
+            html: template,
+          }
+        )
+        setStart(data.startDate);
+        setEnd(data.endDate);
 
-      alert("Event updated successfully");
-      setIsEditOpen(false);
-      clearErrors();
+        alert("Event updated successfully");
+        setIsEditOpen(false);
+        clearErrors();
+      }
     } catch (error) {
       console.error(error);
       alert("Error updating event");
@@ -151,7 +134,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
 
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{event.title}</DialogTitle>
+            <DialogTitle>{event?.title}</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-4">
@@ -160,7 +143,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
               <div>
                 <p className="text-sm font-medium">Client</p>
                 <p className="text-sm text-muted-foreground">
-                  {event.user.name}
+                  {event?.user.name}
                 </p>
               </div>
             </div>
@@ -211,13 +194,10 @@ export function EventDetailsDialog({ event, children }: IProps) {
                 </div>
                 <HerouiButton onPress={async () => {                  
                   const info = (await updateMeetingLink({
-                    eventId: event.meetingGoogleId || "",
+                    eventId: event?.meetingGoogleId || "",
                     startDate: start,
                     endDate: end,
                   })) as any;
-                  if (info) {
-                    setMeetingInfo(info);
-                  }
                 }} className="bg-amber-500 text-white text-lg font-bold">
                   <SiGooglemeet size={20} />
                   Update Meeting Link
@@ -229,7 +209,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
                       <div>
                         <p className="text-sm font-medium">Description</p>
                         <p className="text-sm text-muted-foreground">
-                          {event.description}
+                          {event?.description}
                         </p>
                       </div>
                     </div>
@@ -239,8 +219,8 @@ export function EventDetailsDialog({ event, children }: IProps) {
                         onPress={() => {
                           setIsEditOpen(false);
                           // Reset to original values
-                          setStart(event.startDate || new Date().toISOString());
-                          setEnd(event.endDate || new Date().toISOString());
+                          setStart(event?.startDate || new Date().toISOString());
+                          setEnd(event?.endDate || new Date().toISOString());
                           setOpen(false);
                           clearErrors();
                         }}
@@ -285,7 +265,7 @@ export function EventDetailsDialog({ event, children }: IProps) {
                 <div>
                   <p className="text-sm font-medium">Description</p>
                   <p className="text-sm text-muted-foreground">
-                    {event.description}
+                    {event?.description}
                   </p>
                 </div>
               </div>

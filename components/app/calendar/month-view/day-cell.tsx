@@ -13,8 +13,8 @@ import { getMonthCellEvents } from "@/lib/helpers";
 import { FiTrash2 } from "react-icons/fi";
 import { deleteEvent, sendMail } from "@/lib/server-functions";
 import { DeleteEventDialog } from "../dialogs/delete-event-dialog";
+import { MAX_VISIBLE_EVENTS, monthsList } from "@/constants";
 
-const MAX_VISIBLE_EVENTS = 3;
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
   const { push } = useRouter();
@@ -32,20 +32,7 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
     setSelectedDate(date);
     push("/day-view");
   };
-  const months = [
-    "Jan",
-    "Fév",
-    "Mar",
-    "Avr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Aoû",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Déc",
-  ];
+
   return (
     <div
       className={cn(
@@ -93,7 +80,7 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
                       const template = getCancelTemplateMail({
                         data: {
                           client: event.user.name,
-                          date: `${new Date(event.startDate).getDay()} ${months[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
+                          date: `${new Date(event.startDate).getDay()} ${monthsList[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
                           startDate:
                             new Date(event.startDate).getHours() +
                             "h:" +

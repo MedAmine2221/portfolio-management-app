@@ -1,21 +1,12 @@
-import type { IEvent } from "@/types/interfaces";
-
 import { differenceInDays, format, parseISO, startOfDay } from "date-fns";
 
 import { AgendaEventCard } from "./agenda-event-card";
+import { AgendaDayGroupProps } from "@/types/interfaces";
 
-interface IProps {
-  date: Date;
-  events: IEvent[];
-  multiDayEvents: IEvent[];
-}
-
-export function AgendaDayGroup({ date, events, multiDayEvents }: IProps) {
+export function AgendaDayGroup({ date, events, multiDayEvents }: AgendaDayGroupProps) {
   const sortedEvents = [...events].sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
   );
-  const hasAnyEvents = events.length > 0;
-
   return (
     <div className="space-y-4">
       <div className="sticky top-0 flex items-center gap-4 bg-background py-2">

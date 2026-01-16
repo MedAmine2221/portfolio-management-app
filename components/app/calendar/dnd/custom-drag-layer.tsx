@@ -1,15 +1,6 @@
-"use client";
-
-import type { IEvent } from "@/types/interfaces";
-
+"use client";;
+import { IDragItem } from "@/types/interfaces";
 import { useDragLayer } from "react-dnd";
-
-interface IDragItem {
-  event: IEvent;
-  children: React.ReactNode;
-  width: number;
-  height: number;
-}
 
 export function CustomDragLayer() {
   const {
