@@ -1,5 +1,5 @@
-"use client";
-import type { ChildrenProps, IEvent } from "@/types/interfaces";
+"use client";;
+import type { ChildrenProps } from "@/types/interfaces";
 
 import { useMemo, useState } from "react";
 import { format, isValid } from "date-fns";
@@ -23,7 +23,6 @@ import {
 import { Button } from "@/components/shadcnUI/ui/button";
 import { getTemplateMail, updateMeetingLink } from "@/lib/utils";
 import { sendMail } from "@/lib/server-functions";
-import { SiGooglemeet } from "react-icons/si";
 import { monthsList } from "@/constants";
 
 export function EventDetailsDialog({ event, children }: ChildrenProps) {
@@ -60,8 +59,13 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const onSubmit = async (data: any) => {
     try {
       if(event){
-          const ancienne_date = `${new Date(event?.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(event?.startDate).getFullYear()}`;
-          const eventRef = doc(
+        await updateMeetingLink({
+          eventId: event?.meetingGoogleId || "",
+          startDate: start,
+          endDate: end,
+        });
+        const ancienne_date = `${new Date(event?.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(event?.startDate).getFullYear()}`;
+        const eventRef = doc(
           db,
           "contact",
           String(event?.user.id),
@@ -199,16 +203,6 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
                     }}
                   />
                 </div>
-                <HerouiButton onPress={async () => {                  
-                  const info = (await updateMeetingLink({
-                    eventId: event?.meetingGoogleId || "",
-                    startDate: start,
-                    endDate: end,
-                  })) as any;
-                }} className="bg-amber-500 text-white text-lg font-bold">
-                  <SiGooglemeet size={20} />
-                  Update Meeting Link
-                </HerouiButton>
                 {isEditOpen && (
                   <>
                     <div className="flex items-start gap-2">
