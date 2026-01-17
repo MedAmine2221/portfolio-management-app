@@ -12,6 +12,7 @@ export type AppUser = {
   object: string;
   message: string;
   createdAt: string;
+  status: "Waiting" | "Negotiating" | "In progress" |"Cancelled" | "Completed"
 };
 
 export type TCalendarView = "day" | "week" | "month" | "year" | "agenda";

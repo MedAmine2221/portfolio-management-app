@@ -48,7 +48,8 @@ export const signIn = async (
         dispatch(setToken(token));
         dispatch(setProfile({ uid: user.uid }));
         const events = await getCalendar();
-        const users = await getClients();        
+        const users = await getClients();
+          
         dispatch(setCalendar(events));
         dispatch(setClients(users));
         router.replace("/calendar/month-view");

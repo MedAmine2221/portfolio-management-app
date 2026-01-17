@@ -22,6 +22,7 @@ import {
 
 import { NameAbreviation } from "@/lib/utils";
 import { AppUser } from "@/types";
+import { FiCheckCircle, FiClock, FiPlay, FiRepeat, FiXCircle } from "react-icons/fi";
 
 /* ================= ICONS ================= */
 
@@ -60,6 +61,7 @@ const columns = [
   { name: "EMAIL", uid: "email", sortable: false },
   { name: "OBJECT", uid: "object", sortable: false },
   { name: "MESSAGE", uid: "message", sortable: false },
+  { name: "STATUS", uid: "status", sortable: false },
   { name: "CREATED", uid: "createdAt", sortable: true },
   { name: "ACTIONS", uid: "actions" },
 ];
@@ -69,12 +71,13 @@ const INITIAL_VISIBLE_COLUMNS = [
   "object",
   "createdAt",
   "actions",
+  "status",
   "avatar",
 ];
 
 /* ================= COMPONENT ================= */
 
-export default function AppTables({ data }: { data: AppUser[] }) {
+export default function AppTables({ data }: { data: AppUser[] }) {  
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
@@ -140,6 +143,19 @@ export default function AppTables({ data }: { data: AppUser[] }) {
       case "email":
         return user.email || "—";
 
+      case "status":
+        return (
+          <div className={`flex justify-center items-center text-center rounded-2xl mx-2 text-base font-medium border 
+            ${user.status === "Completed" ? "border-green-400" : user.status === "Cancelled" ? "border-red-400" : user.status === "In progress" ? "border-primary-400" : "border-warning-400"} 
+            ${user.status === "Completed" ? "bg-green-200" : user.status === "Cancelled" ? "bg-red-200" : user.status === "In progress" ? "bg-primary-200" : "bg-warning-200"} 
+            ${user.status === "Completed" ? "text-success-600" : user.status === "Cancelled" ? "text-danger-600" : user.status === "In progress" ? "text-primary-600" : "text-warning-600"}
+          `}>
+            <p className="mx-2 text-base">
+              {user.status}
+            </p>
+          </div>
+        );
+
       case "object":
         return user.object || "—";
 
@@ -166,12 +182,35 @@ export default function AppTables({ data }: { data: AppUser[] }) {
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem key="view">View</DropdownItem>
-              <DropdownItem key="edit">Edit</DropdownItem>
-              <DropdownItem key="delete" className="text-danger">
-                Delete
+              <DropdownItem key="waiting" startContent={<FiClock />}>
+                Waiting
+              </DropdownItem>
+
+              <DropdownItem key="negotiating" startContent={<FiRepeat />}>
+                Negotiating
+              </DropdownItem>
+
+              <DropdownItem key="progress" startContent={<FiPlay />}>
+                In progress
+              </DropdownItem>
+
+              <DropdownItem
+                key="cancelled"
+                className="text-danger"
+                startContent={<FiXCircle />}
+              >
+                Cancelled
+              </DropdownItem>
+
+              <DropdownItem
+                key="completed"
+                className="text-success"
+                startContent={<FiCheckCircle />}
+              >
+                Completed
               </DropdownItem>
             </DropdownMenu>
+
           </Dropdown>
         );
 
@@ -271,7 +310,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
     >
       <TableHeader columns={headerColumns}>
         {(column) => (
-          <TableColumn key={column.uid} allowsSorting={column.sortable}>
+          <TableColumn   className={column.uid === "status" ? "text-center" : ""} key={column.uid} allowsSorting={column.sortable}>
             {column.name}
           </TableColumn>
         )}

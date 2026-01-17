@@ -95,6 +95,7 @@ export type Client = {
   object: string;
   message: string;
   createdAt: string;
+  status: "Waiting" | "Negotiating" | "In progress" |"Cancelled" | "Completed";
   userEventsInfo: any[];
 };
 
@@ -105,8 +106,7 @@ export const getClients = async (): Promise<Client[]> => {
   const users = await Promise.all(
     snapshot.docs.map(async (doc) => {
       const data = doc.data() as Omit<Client, "id" | "userEventsInfo">;
-      const userEventsInfo = await getCalendarByContactId(doc.id);
-
+      const userEventsInfo = await getCalendarByContactId(doc.id);      
       return {
         id: doc.id,
         ...data,
