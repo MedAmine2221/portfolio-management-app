@@ -15,6 +15,27 @@ export const monthsList = [
   "Déc",
 ];
 
+export const columns = [
+  { name: "AVATAR", uid: "avatar", sortable: false },
+  { name: "FIRSTNAME", uid: "firstName", sortable: true },
+  { name: "LASTNAME", uid: "lastName", sortable: true },
+  { name: "EMAIL", uid: "email", sortable: false },
+  { name: "OBJECT", uid: "object", sortable: false },
+  { name: "MESSAGE", uid: "message", sortable: false },
+  { name: "STATUS", uid: "status", sortable: false },
+  { name: "CREATED", uid: "createdAt", sortable: true },
+  { name: "ACTIONS", uid: "actions" },
+];
+
+export const INITIAL_VISIBLE_COLUMNS = [
+  "email",
+  "object",
+  "createdAt",
+  "actions",
+  "status",
+  "avatar",
+];
+
 export const WEEK_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 
