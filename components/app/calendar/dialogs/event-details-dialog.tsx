@@ -3,7 +3,7 @@ import type { ChildrenProps } from "@/types/interfaces";
 
 import { useMemo, useState } from "react";
 import { format, isValid } from "date-fns";
-import { Calendar, Clock, Text, User } from "lucide-react";
+import { Calendar, Clock, Loader2, Text, User } from "lucide-react";
 import { Button as HerouiButton } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,9 +24,14 @@ import { Button } from "@/components/shadcnUI/ui/button";
 import { getTemplateMail, updateMeetingLink } from "@/lib/utils";
 import { sendMail } from "@/lib/server-functions";
 import { monthsList } from "@/constants";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 
 export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const loading = useSelector((state: RootState) => state.loading.loading);
+  const dispatch = useDispatch();
   const [start, setStart] = useState(
     () => event?.startDate || new Date().toISOString(),
   );
@@ -59,6 +64,7 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const onSubmit = async (data: any) => {
     try {
       if(event){
+        dispatch(setLoadingTrue());
         await updateMeetingLink({
           eventId: event?.meetingGoogleId || "",
           startDate: start,
@@ -113,6 +119,7 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
       console.error(error);
       alert("Error updating event");
     } finally {
+      dispatch(setLoadingFalse());
       resetForm();
       setOpen(false);
     }
@@ -221,7 +228,15 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
                       >
                         Cancel
                       </HerouiButton>
-                      <HerouiButton type="submit">Save</HerouiButton>
+                      <HerouiButton disabled={loading} type="submit">
+                        {!loading ? 
+                          <p className="flex items-center gap-2">
+                            Save
+                          </p>
+                          : 
+                          <Loader2 className="animate-spin" />
+                        }
+                      </HerouiButton>
                     </DialogFooter>
                   </>
                 )}

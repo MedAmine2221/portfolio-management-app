@@ -1,11 +1,11 @@
 "use client";;
 import { useMemo, useState } from "react";
-import { Calendar, Clock, User } from "lucide-react";
+import { Calendar, Clock, Loader2, User } from "lucide-react";
 import { Button as HerouiButton } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addDoc, collection } from "firebase/firestore";
 
 import {
@@ -31,6 +31,7 @@ import { getClientById, sendMail } from "@/lib/server-functions";
 import { signIn, useSession } from "next-auth/react";
 import { monthsList } from "@/constants";
 import { ChildrenProps } from "@/types/interfaces";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 
 export function AddEventDialog({ children }: ChildrenProps) {
     const {
@@ -47,6 +48,8 @@ export function AddEventDialog({ children }: ChildrenProps) {
       endDate: new Date().toISOString(),
     },
   });
+  const loading = useSelector((state: RootState) => state.loading.loading);
+  const dispatch = useDispatch();
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
@@ -94,6 +97,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
       return;
     }
     try {
+      dispatch(setLoadingTrue());
       const info = await addMeetingLink(
         {
           title: (await clientInfo).object || "",
@@ -149,6 +153,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
       console.error(error);
       alert("error whene adding event");
     } finally {
+      dispatch(setLoadingFalse());
       resetForm();
       setOpen(false);
     }
@@ -217,7 +222,15 @@ export function AddEventDialog({ children }: ChildrenProps) {
             />
           </div>
           <DialogFooter className="mt-4 flex justify-end gap-2">
-            <HerouiButton type="submit">Save</HerouiButton>
+            <HerouiButton disabled={loading} type="submit">
+              {!loading ? 
+                <p className="flex items-center gap-2">
+                  Save
+                </p>
+                : 
+                <Loader2 className="animate-spin" />
+              }
+            </HerouiButton>
           </DialogFooter>
         </form>
       </DialogContent>

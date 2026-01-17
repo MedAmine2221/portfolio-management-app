@@ -14,12 +14,17 @@ import { FiTrash2 } from "react-icons/fi";
 import { deleteEvent, sendMail } from "@/lib/server-functions";
 import { DeleteEventDialog } from "../dialogs/delete-event-dialog";
 import { MAX_VISIBLE_EVENTS, monthsList } from "@/constants";
+import { RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
   const { push } = useRouter();
+  const loading = useSelector((state: RootState) => state.loading.loading);
   const { setSelectedDate } = useCalendar();
-
+  const dispatch = useDispatch();
   const { day, currentMonth, date } = cell;
 
   const cellEvents = useMemo(
@@ -32,7 +37,41 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
     setSelectedDate(date);
     push("/day-view");
   };
-
+  const onDelete = async (event: any) => {
+    try{
+      dispatch(setLoadingTrue());
+      deleteEvent(event.user.id, String(event.id))
+      if(event.meetingGoogleId){                        
+        await deleteMeetingLink({
+          eventId: event.meetingGoogleId
+        });
+      }
+      const template = getCancelTemplateMail({
+        data: {
+          client: event.user.name,
+          date: `${new Date(event.startDate).getDay()} ${monthsList[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
+          startDate:
+            new Date(event.startDate).getHours() +
+            "h:" +
+            new Date(event.startDate).getMinutes() +
+            "min",
+            object: event.title,
+            reason: "Meeting cancelled",
+        },
+      });
+      await sendMail(
+        {
+          to: event.user.email,
+          subject: event.title,
+          html: template,
+        }
+      )
+    }catch(err){
+      console.error("Error deleting event:", err);
+    }finally{
+      dispatch(setLoadingFalse());
+    }
+  }
   return (
     <div
       className={cn(
@@ -71,34 +110,14 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
                   <EventBullet className="lg:hidden" color={event.color} />
                   <div className="flex flex-row items-center">
                     <DeleteEventDialog action={async ()=>{
-                      deleteEvent(event.user.id, String(event.id))
-                      if(event.meetingGoogleId){                        
-                        await deleteMeetingLink({
-                          eventId: event.meetingGoogleId
-                        });
-                      }
-                      const template = getCancelTemplateMail({
-                        data: {
-                          client: event.user.name,
-                          date: `${new Date(event.startDate).getDay()} ${monthsList[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
-                          startDate:
-                            new Date(event.startDate).getHours() +
-                            "h:" +
-                            new Date(event.startDate).getMinutes() +
-                            "min",
-                          object: event.title,
-                          reason: "Meeting cancelled",
-                        },
-                      });
-                      await sendMail(
-                        {
-                          to: event.user.email,
-                          subject: event.title,
-                          html: template,
-                        }
-                      )
+                      onDelete(event);
                     }}>
-                      <FiTrash2 className="mx-2 text-lg font-bold" color="red"/>
+                      {
+                      !loading ?
+                        <FiTrash2 className="mx-2 text-lg font-bold" color="red"/>
+                        :
+                        <Loader2 className="animate-spin mx-2 text-lg font-bold" color="red"/>
+                      }
                     </DeleteEventDialog>
                     <MonthEventBadge
                       cellDate={startOfDay(date)}
