@@ -27,6 +27,7 @@ import { monthsList } from "@/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { updateEvent } from "@/redux/calendar/calendarReducer";
 
 export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -120,6 +121,11 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
       alert("Error updating event");
     } finally {
       dispatch(setLoadingFalse());
+      dispatch(updateEvent({
+        id: event?.id,
+        startDate: start,
+        endDate: end,
+      }));
       resetForm();
       setOpen(false);
     }

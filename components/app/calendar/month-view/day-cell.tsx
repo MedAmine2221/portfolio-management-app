@@ -18,6 +18,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { deleteEventFromCalendar } from "@/redux/calendar/calendarReducer";
 
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
@@ -66,9 +67,11 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
           html: template,
         }
       )
+
     }catch(err){
       console.error("Error deleting event:", err);
     }finally{
+      dispatch(deleteEventFromCalendar({id: event.id}));
       dispatch(setLoadingFalse());
     }
   }

@@ -32,6 +32,7 @@ import { signIn, useSession } from "next-auth/react";
 import { monthsList } from "@/constants";
 import { ChildrenProps } from "@/types/interfaces";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { addEvent } from "@/redux/calendar/calendarReducer";
 
 export function AddEventDialog({ children }: ChildrenProps) {
     const {
@@ -114,7 +115,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
 
       if(info?.meetLink && info?.eventId) {        
         const eventRef = collection(db, "contact", selectedClient, "events");
-        await addDoc(eventRef, {
+        const eventDoc = await addDoc(eventRef, {
           startDate: data.startDate,
           endDate: data.endDate,
           progress: "to do",
@@ -146,7 +147,26 @@ export function AddEventDialog({ children }: ChildrenProps) {
             subject: selectedClientInfo?.object,
             html: template,
           }
-        ) 
+        )
+        dispatch(addEvent(
+          {
+            id: eventDoc.id,
+            title: selectedClientInfo?.object,
+            description: selectedClientInfo?.message,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            progress: "to do",
+            color: "blue",
+            meetingGoogleId: info?.eventId || "",
+            meetingLink: info?.meetLink || "",
+            user: {
+              id: selectedClientInfo.id,
+              name: `${selectedClientInfo.lastName} ${selectedClientInfo.firstName}`,
+              email: selectedClientInfo.email,
+              picturePath: null,
+            },
+          }
+        ));
         alert("Event added successfuly");
       }
     } catch (error) {
