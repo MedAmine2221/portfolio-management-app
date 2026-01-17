@@ -1,11 +1,9 @@
-"use client";
+"use client";;
 import type { DayCellProps } from "@/types/interfaces";
 
 import { useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { isToday, startOfDay } from "date-fns";
 
-import { useCalendar } from "@/contexts/calendar-context";
 import { EventBullet } from "@/components/app/calendar/month-view/event-bullet";
 import { MonthEventBadge } from "@/components/app/calendar/month-view/month-event-badge";
 import { cn, deleteMeetingLink, getCancelTemplateMail } from "@/lib/utils";
@@ -22,9 +20,7 @@ import { deleteEventFromCalendar } from "@/redux/calendar/calendarReducer";
 
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
-  const { push } = useRouter();
   const loading = useSelector((state: RootState) => state.loading.loading);
-  const { setSelectedDate } = useCalendar();
   const dispatch = useDispatch();
   const { day, currentMonth, date } = cell;
 
@@ -33,11 +29,6 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
     [date, events, eventPositions],
   );
   const isSunday = date.getDay() === 0;
-
-  const handleClick = () => {
-    setSelectedDate(date);
-    push("/day-view");
-  };
   const onDelete = async (event: any) => {
     try{
       dispatch(setLoadingTrue());
@@ -89,7 +80,6 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
           isToday(date) &&
             "bg-primary font-bold text-primary-foreground hover:bg-primary",
         )}
-        onClick={handleClick}
       >
         {day}
       </button>

@@ -9,7 +9,7 @@ import { Input } from "@heroui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { doc, updateDoc } from "firebase/firestore";
-
+import { SiGooglemeet } from "react-icons/si";
 import { eventSchema } from "@/schema/calendar";
 import { db } from "@/config/firebase";
 import {
@@ -288,15 +288,28 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
           </div>
 
           {!isEditOpen && (
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsEditOpen(true)}
-              >
-                Edit
-              </Button>
-            </DialogFooter>
+            <div className="flex flex-row justify-end gap-2 mt-4">
+              <DialogFooter>
+                <HerouiButton
+                  type="button"
+                  className="bg-blue-200 border border-blue-300"
+                >
+                  <SiGooglemeet className="text-blue-600 text-2xl"/>
+                  <a href={event?.meetingLink} className="text-blue-600 font-bold" target="_blank" rel="noopener noreferrer">
+                    Go To Google Meet
+                  </a>
+                </HerouiButton>
+              </DialogFooter>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditOpen(true)}
+                  >
+                  Edit
+                </Button>
+              </DialogFooter>
+            </div>
           )}
         </DialogContent>
       </Dialog>
