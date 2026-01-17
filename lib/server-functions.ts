@@ -25,7 +25,6 @@ export const getCalendar = async () => {
         description: contactData.message,
         startDate: eventData.startDate,
         endDate: eventData.endDate,
-        progress: "to do",
         color: "blue",
         meetingGoogleId: eventData.meetingGoogleId || "",
         meetingLink: eventData.meetingLink || "",
@@ -64,7 +63,6 @@ export const getCalendarByContactId = async (id: string) => {
         description: contactData?.message || "",
         startDate: eventData.startDate,
         endDate: eventData.endDate,
-        progress: "to do",
         color: "blue",
       });
     });
@@ -97,7 +95,6 @@ export type Client = {
   object: string;
   message: string;
   createdAt: string;
-  progress: "to do" | "in progress" | "done";
   userEventsInfo: any[];
 };
 

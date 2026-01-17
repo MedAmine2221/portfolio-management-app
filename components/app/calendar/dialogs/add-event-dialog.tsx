@@ -118,7 +118,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
         const eventDoc = await addDoc(eventRef, {
           startDate: data.startDate,
           endDate: data.endDate,
-          progress: "to do",
           meetingLink: info?.meetLink || "",
           meetingGoogleId: info?.eventId || "",
           createdAt: new Date().toISOString(),
@@ -155,7 +154,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
             description: selectedClientInfo?.message,
             startDate: data.startDate,
             endDate: data.endDate,
-            progress: "to do",
             color: "blue",
             meetingGoogleId: info?.eventId || "",
             meetingLink: info?.meetLink || "",

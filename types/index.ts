@@ -12,7 +12,6 @@ export type AppUser = {
   object: string;
   message: string;
   createdAt: string;
-  progress: "to do" | "in progress" | "done";
 };
 
 export type TCalendarView = "day" | "week" | "month" | "year" | "agenda";

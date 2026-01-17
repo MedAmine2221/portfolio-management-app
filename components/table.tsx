@@ -17,7 +17,6 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
   Pagination,
 } from "@heroui/react";
 
@@ -55,14 +54,13 @@ export const VerticalDotsIcon = (props: IconSvgProps) => (
 );
 
 const columns = [
-  { name: "", uid: "" },
+  { name: "AVATAR", uid: "avatar", sortable: false },
   { name: "FIRSTNAME", uid: "firstName", sortable: true },
   { name: "LASTNAME", uid: "lastName", sortable: true },
   { name: "EMAIL", uid: "email", sortable: false },
   { name: "OBJECT", uid: "object", sortable: false },
   { name: "MESSAGE", uid: "message", sortable: false },
   { name: "CREATED", uid: "createdAt", sortable: true },
-  { name: "PROGRESS", uid: "progress", sortable: false },
   { name: "ACTIONS", uid: "actions" },
 ];
 
@@ -70,9 +68,8 @@ const INITIAL_VISIBLE_COLUMNS = [
   "email",
   "object",
   "createdAt",
-  "progress",
   "actions",
-  "",
+  "avatar",
 ];
 
 /* ================= COMPONENT ================= */
@@ -126,7 +123,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
   const renderCell = (user: AppUser, columnKey: React.Key) => {
     switch (columnKey) {
-      case "":
+      case "avatar":
         return (
           <div className="mr-4 rounded-full bg-default-100 border border-default-300 w-10 h-10 flex justify-center items-center">
             <p className="mx-2 text-xl font-bold text-default-600">
@@ -148,29 +145,17 @@ export default function AppTables({ data }: { data: AppUser[] }) {
 
       case "message":
         return user.message || "—";
-
+      
       case "createdAt":
-        return user.createdAt || "—";
-
-      case "progress":
         return (
-          <Chip
-            color={
-              user.progress === "to do"
-                ? "danger"
-                : user.progress === "in progress"
-                  ? "warning"
-                  : "success"
-            }
-            size="sm"
-            variant="flat"
-          >
-            {user.progress}
-          </Chip>
+            <p className="mx-2 text-sm">
+              {`${new Date(user.createdAt).getDay()}-${
+                  new Date(user.createdAt).getMonth() + 1
+                }-${new Date(user.createdAt).getFullYear()} at ${new Date(
+                  user.createdAt,
+                ).getHours()}:${new Date(user.createdAt).getMinutes()}`}
+            </p>
         );
-
-      case "createdAt":
-        return new Date(user.createdAt).toLocaleDateString();
 
       case "actions":
         return (
