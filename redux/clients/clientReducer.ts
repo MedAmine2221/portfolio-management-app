@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState: { clients: any[] } = {
   clients: [],
 };
-const calendarSlice = createSlice({
+const clientSlice = createSlice({
   name: "clients",
   initialState,
   reducers: {
@@ -13,8 +13,20 @@ const calendarSlice = createSlice({
     clearClients: (state) => {
       state.clients = [];
     },
+    updateClient: (state, action) => {
+      const { id } = action.payload;      
+      const index = state.clients.findIndex(
+        (client) => client.id === id
+      );      
+      if (index !== -1) {
+        state.clients[index] = {
+          ...state.clients[index],
+          ...action.payload,
+        };
+      }
+    },
   },
 });
 
-export const { setClients, clearClients } = calendarSlice.actions;
-export default calendarSlice.reducer;
+export const { setClients, clearClients, updateClient } = clientSlice.actions;
+export default clientSlice.reducer;

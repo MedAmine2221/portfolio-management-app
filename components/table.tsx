@@ -23,8 +23,11 @@ import { columns, INITIAL_VISIBLE_COLUMNS } from "@/constants";
 import { SearchIcon } from "./app/user-table/searchIcon";
 import { ChevronDownIcon } from "./app/user-table/chevronDownIcon";
 import { renderCell } from "./app/user-table/renderCell";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
-export default function AppTables({ data }: { data: AppUser[] }) {  
+export default function AppTables({ data }: { data: AppUser[] }) { 
+  const dispatch = useDispatch();
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set());
   const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
@@ -38,7 +41,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
   });
   const filteredItems = React.useMemo(() => {
     return data.filter((user) =>
-      user.firstName.toLowerCase().includes(filterValue.toLowerCase()),
+      user.firstName?.toLowerCase().includes(filterValue.toLowerCase()),
     );
   }, [data, filterValue]);
 
@@ -166,7 +169,7 @@ export default function AppTables({ data }: { data: AppUser[] }) {
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell>{renderCell(dispatch, item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}
