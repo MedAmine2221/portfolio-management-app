@@ -7,7 +7,7 @@ export default async function Layout({
 }: ChildrenProps) {
   return (
     <CalendarProvider>
-      <div className="mx-auto flex max-w-screen flex-col gap-4 px-8 py-4">
+      <div className="mx-auto flex max-w-screen flex-col gap-4 px-2 py-4">
         <Navbar />
         {children}
       </div>

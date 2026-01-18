@@ -109,7 +109,7 @@ export const Navbar = () => {
 
   return (
     <div className="w-full backdrop-blur-lg bg-white/70 border-b border-default-200/20 sticky top-0 z-50">
-      <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-3">
+      <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-2 py-3">
         <NextLink
           className="flex flex-row items-center font-bold text-black text-lg tracking-tight hover:text-black transition-colors"
           href="/calendar/agenda-view"
@@ -134,7 +134,7 @@ export const Navbar = () => {
       </div>
 
       <div className="md:hidden">
-        <div className="flex items-center justify-between px-6 py-3">
+        <div className="flex items-center justify-between px-2 py-3">
           <NextLink
             className="font-bold text-black text-lg tracking-tight"
             href="/calendar/month-view"
