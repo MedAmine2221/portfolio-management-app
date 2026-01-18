@@ -42,22 +42,23 @@ export default function AuthForm() {
   const router = useRouter();
   const submit = async (data: any) => {
     const verify = hasCookies();
-    if (!verify){
+    if (!verify === false){
       window.location.reload();
       return;
+    }else{
+      login(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        dispatch,
+        router,
+      );
+      if (!session) {      
+        await signIn("google");
+      }  
+      router.replace("/calendar/month-view");
     }
-    login(
-      {
-        email: data.email,
-        password: data.password,
-      },
-      dispatch,
-      router,
-    );
-    if (!session) {      
-      await signIn("google");
-    }  
-    router.replace("/calendar/month-view");
   };
 
   return (
