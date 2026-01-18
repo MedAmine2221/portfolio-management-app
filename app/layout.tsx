@@ -8,9 +8,24 @@ import { ReduxProviders } from "./redux-provider";
 import ChangePathProvider from "./change-path-provider";
 import { SessionProvider } from "next-auth/react";
 import { ChildrenProps } from "@/types/interfaces";
+import { useEffect } from "react";
+import { hasNextAuthSessionToken } from "@/lib/server-functions";
+import { usePathname, useRouter } from "next/navigation";
 export default function RootLayout({
   children,
 }: ChildrenProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  useEffect(() => {
+    async function checkSession() {
+      const verify = await hasNextAuthSessionToken();
+      if (!verify) {
+        router.push("/auth");
+      }
+    }
+    checkSession();
+  }, [router, pathname]);
+
   return (
     <html suppressHydrationWarning lang="en">
       <head />

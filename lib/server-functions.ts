@@ -11,7 +11,12 @@ export async function clearCookies() {
     (await cookieStore).delete(cookie.name);
   });
 }
+export async function hasNextAuthSessionToken(): Promise<boolean> {
+  const cookieStore = cookies();
+  const sessionCookie = (await cookieStore).get("next-auth.session-token");
 
+  return !!sessionCookie;
+}
 export const getCalendar = async () => {
   const contactsSnapshot = await adminDb.collection("contact").get();
 
