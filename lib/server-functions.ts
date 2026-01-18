@@ -3,14 +3,6 @@ import { adminDb } from "@/config/firebase-admin.init";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { cookies } from "next/headers";
-
-export async function clearCookies() {
-  const cookieStore = cookies();
-
-  (await cookieStore).getAll().forEach(async (cookie) => {
-    (await cookieStore).delete(cookie.name);
-  });
-}
 export async function hasNextAuthSessionToken(): Promise<boolean> {
   const cookieStore = cookies();
   const sessionCookie = (await cookieStore).get("next-auth.session-token");

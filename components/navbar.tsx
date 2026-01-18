@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
 import NextLink from "next/link";
@@ -18,7 +18,6 @@ import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
 import { clearToken } from "@/redux/token/tokenReducer";
-import { clearCookies } from "@/lib/server-functions";
 
 export const Navbar = () => {
   const profile: any = useSelector((item: RootState) => item?.profile?.items);
@@ -46,11 +45,11 @@ export const Navbar = () => {
           body: JSON.stringify({ uid: profile.uid }),
         });
       }
+      await fetch("/api/logout", { method: "POST" });
       dispatch(clearToken());
       dispatch(clearProfile());
       dispatch(clearClients());
       dispatch(clearCalendar());
-      await clearCookies();
       router.replace("/auth");
     } catch (error) {
       console.error(error);
