@@ -1,4 +1,4 @@
-"use client";
+"use client";;
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
@@ -14,6 +14,7 @@ import { login } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 import { useSession, signIn } from "next-auth/react";
+import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 export default function AuthForm() {
   const {data: session} = useSession();
   const loading = useSelector((item: RootState) => item?.loading?.loading);
@@ -40,18 +41,25 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = async (data: any) => {
-    login(
-      {
-        email: data.email,
-        password: data.password,
-      },
-      dispatch,
-      router,
-    );
-    if (!session) {      
-      await signIn("google");
-      router.replace("/calendar/month-view");
-    }  
+    try{
+      dispatch(setLoadingTrue());
+      login(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        dispatch,
+        router,
+      );
+      if (!session) {      
+        await signIn("google");
+        router.replace("/calendar/month-view");
+      }  
+    }catch(err: any){
+      console.error("Login error:", err);
+    }finally {
+      dispatch(setLoadingFalse());
+    }
   };
 
   return (

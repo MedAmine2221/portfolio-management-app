@@ -33,8 +33,6 @@ export const login = async (
   dispatch: AppDispatch,
   router: any,
 ) => {
-  dispatch(setLoadingTrue());
-
   try {
     const { email, password } = data;
     const userCredential = await signInWithEmailAndPassword(
@@ -58,8 +56,6 @@ export const login = async (
     console.error("Firebase sign-in failed:", error);
     // DO NOT crash render
     alert(error?.message ?? "Login failed");
-  } finally {
-    dispatch(setLoadingFalse());
   }
 };
 
