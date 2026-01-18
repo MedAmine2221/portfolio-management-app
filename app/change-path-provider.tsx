@@ -37,7 +37,7 @@ export default function ChangePathProvider({
     };
 
     checkToken();
-  }, [router,token, pathname]);
+  }, [router, pathname]);
 
   return <>{children}</>;
 }
