@@ -41,25 +41,18 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = async (data: any) => {
-    try{
-      dispatch(setLoadingTrue());
-      login(
-        {
-          email: data.email,
-          password: data.password,
-        },
-        dispatch,
-        router,
-      );
-      if (!session) {      
-        await signIn("google");
-        router.replace("/calendar/month-view");
-      }  
-    }catch(err: any){
-      console.error("Login error:", err);
-    }finally {
-      dispatch(setLoadingFalse());
-    }
+    login(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      dispatch,
+      router,
+    );
+    if (!session) {      
+      await signIn("google");
+    }  
+    router.replace("/calendar/month-view");
   };
 
   return (
