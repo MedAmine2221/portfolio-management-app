@@ -18,6 +18,7 @@ import { clearProfile } from "@/redux/profile/profileReducer";
 import { clearClients } from "@/redux/clients/clientReducer";
 import { clearCalendar } from "@/redux/calendar/calendarReducer";
 import { clearToken } from "@/redux/token/tokenReducer";
+import { clearCookies } from "@/lib/server-functions";
 
 export const Navbar = () => {
   const profile: any = useSelector((item: RootState) => item?.profile?.items);
@@ -49,6 +50,7 @@ export const Navbar = () => {
       dispatch(clearProfile());
       dispatch(clearClients());
       dispatch(clearCalendar());
+      await clearCookies();
       router.replace("/auth");
     } catch (error) {
       console.error(error);

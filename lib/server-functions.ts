@@ -2,6 +2,15 @@
 import { adminDb } from "@/config/firebase-admin.init";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { cookies } from "next/headers";
+
+export async function clearCookies() {
+  const cookieStore = cookies();
+
+  (await cookieStore).getAll().forEach(async (cookie) => {
+    (await cookieStore).delete(cookie.name);
+  });
+}
 
 export const getCalendar = async () => {
   const contactsSnapshot = await adminDb.collection("contact").get();
