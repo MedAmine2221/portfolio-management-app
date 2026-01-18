@@ -45,7 +45,7 @@ export const Navbar = () => {
           body: JSON.stringify({ uid: profile.uid }),
         });
       }
-      await fetch("/api/logout", { method: "POST" });
+      await fetch("/api/logout", { method: "POST", credentials: "include" });
       dispatch(clearToken());
       dispatch(clearProfile());
       dispatch(clearClients());
