@@ -14,7 +14,7 @@ import { login } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 import { useSession, signIn } from "next-auth/react";
-import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { hasCookies } from "@/lib/server-functions";
 export default function AuthForm() {
   const {data: session} = useSession();
   const loading = useSelector((item: RootState) => item?.loading?.loading);
@@ -41,6 +41,11 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = async (data: any) => {
+    const verify = hasCookies();
+    if (!verify){
+      router.refresh();
+      return;
+    }
     login(
       {
         email: data.email,
