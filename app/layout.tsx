@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 import { ReduxProviders } from "./redux-provider";
 
 import ChangePathProvider from "./change-path-provider";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signOut } from "next-auth/react";
 import { ChildrenProps } from "@/types/interfaces";
 import { useEffect } from "react";
 import { hasNextAuthSessionToken } from "@/lib/server-functions";
@@ -19,7 +19,9 @@ export default function RootLayout({
   useEffect(() => {
     async function checkSession() {
       const verify = await hasNextAuthSessionToken();
-      if (!verify) {
+      if (!verify && pathname !== "/auth") {
+        alert("Your session has expired. Please log in again.");
+        await signOut({ redirect: false });
         router.push("/auth");
       }
     }
