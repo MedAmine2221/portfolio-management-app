@@ -10,11 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Checkbox } from "@heroui/react";
 
 import loginSchema from "@/schema/auth";
-import { signIn } from "@/lib/utils";
+import { login } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
-
+import { useSession, signIn } from "next-auth/react";
 export default function AuthForm() {
+  const {data: session} = useSession();
   const loading = useSelector((item: RootState) => item?.loading?.loading);
   const auth = useSelector((item: RootState) => item?.auth.auth);
   const dispatch = useDispatch();
@@ -39,14 +40,18 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = async (data: any) => {
-    signIn(
+    login(
       {
         email: data.email,
         password: data.password,
       },
       dispatch,
       router,
-    );    
+    );
+    if (!session) {      
+      await signIn("google");
+      router.replace("/calendar/month-view");
+    }  
   };
 
   return (

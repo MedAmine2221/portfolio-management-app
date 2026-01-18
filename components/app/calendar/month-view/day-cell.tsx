@@ -17,11 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { deleteEventFromCalendar } from "@/redux/calendar/calendarReducer";
-import { signIn, useSession } from "next-auth/react";
 
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
-  const { data: session } = useSession();
   const loading = useSelector((state: RootState) => state.loading.loading);
   const dispatch = useDispatch();
   const { day, currentMonth, date } = cell;
@@ -38,8 +36,6 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
       if(event.meetingGoogleId){                        
         await deleteMeetingLink({
           eventId: event.meetingGoogleId,
-          session,
-          signIn
         });
       }
       const template = getCancelTemplateMail({

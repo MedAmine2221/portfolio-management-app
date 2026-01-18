@@ -2,10 +2,10 @@
 import "@/styles/globals.css";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
 import { RootState } from "@/redux/store";
-import { signIn } from "@/lib/utils";
+import { login } from "@/lib/utils";
 import { ChildrenProps } from "@/types/interfaces";
 
 export default function ChangePathProvider({
@@ -19,17 +19,16 @@ export default function ChangePathProvider({
   useEffect(() => {
     const checkToken = async () => {
       if (token != "") {
-        signIn(
+        login(
           {
             email: auth.email,
             password: auth.password,
           },
           dispatch,
           router,
-        );
-        router.replace("/calendar/month-view");
+        ); 
       } else {
-        if(pathname != "/auth"){
+        if (pathname != "/auth") {
           router.replace("/auth");
         }
       }

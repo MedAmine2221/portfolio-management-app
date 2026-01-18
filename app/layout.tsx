@@ -17,8 +17,8 @@ export default function RootLayout({
       <body>
         <ReduxProviders>
           <Providers>
-            <ChangePathProvider>
-              <SessionProvider>
+            <SessionProvider>
+              <ChangePathProvider>
                 <div className="relative flex min-h-screen flex-col">
                   <main className="flex-1">{children}</main>
                   <footer className="w-full flex items-center justify-center py-3">
@@ -31,8 +31,8 @@ export default function RootLayout({
                     </div>
                   </footer>
                 </div>
-              </SessionProvider>
-            </ChangePathProvider>
+              </ChangePathProvider>
+            </SessionProvider>
           </Providers>
         </ReduxProviders>
       </body>

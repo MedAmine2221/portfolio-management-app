@@ -28,7 +28,6 @@ import {
 import { db } from "@/config/firebase";
 import { addMeetingLink, getTemplateMail } from "@/lib/utils";
 import { getClientById, sendMail } from "@/lib/server-functions";
-import { signIn, useSession } from "next-auth/react";
 import { monthsList } from "@/constants";
 import { ChildrenProps } from "@/types/interfaces";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
@@ -51,7 +50,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
   });
   const loading = useSelector((state: RootState) => state.loading.loading);
   const dispatch = useDispatch();
-  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
@@ -108,8 +106,6 @@ export function AddEventDialog({ children }: ChildrenProps) {
           attendees: [
             (await clientInfo).email,
           ],
-          session,
-          signIn
         }
       );
 

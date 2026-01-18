@@ -28,10 +28,10 @@ export function NameAbreviation(lastName: string, firstName: string) {
   return result;
 }
 
-export const signIn = async (
+export const login = async (
   data: any,
   dispatch: AppDispatch,
-  router: any
+  router: any,
 ) => {
   dispatch(setLoadingTrue());
 
@@ -717,13 +717,7 @@ export const updateMeetingLink = async ({
     eventId,
     startDate,
     endDate,
-    session,
-    signIn
 }: any) =>{
-    if (!session) {
-      await signIn("google");
-      return;
-    }
     await fetch("/api/update-meet", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -738,13 +732,7 @@ export const updateMeetingLink = async ({
 
 export const deleteMeetingLink = async ({
     eventId,
-    session,
-    signIn
 }: any) =>{
-    if (!session) {
-      await signIn("google");
-      return;
-    }
     await fetch("/api/delete-meet", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -759,14 +747,7 @@ export const addMeetingLink = async ({
     startDate,
     endDate,
     attendees,
-    session,
-    signIn
 }: any) => {
-
-    if (!session) {
-      await signIn("google");
-      return;
-    }
 
     const res = await fetch("/api/create-meet", {
       method: "POST",

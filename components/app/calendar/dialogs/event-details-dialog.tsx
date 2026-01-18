@@ -28,10 +28,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { updateEvent } from "@/redux/calendar/calendarReducer";
-import { useSession, signIn } from "next-auth/react";
 
 export function EventDetailsDialog({ event, children }: ChildrenProps) {
-  const { data: session } = useSession();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const loading = useSelector((state: RootState) => state.loading.loading);
   const dispatch = useDispatch();
@@ -72,8 +70,6 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
           eventId: event?.meetingGoogleId || "",
           startDate: start,
           endDate: end,
-          session,
-          signIn
         });
         const ancienne_date = `${new Date(event?.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(event?.startDate).getFullYear()}`;
         const eventRef = doc(
