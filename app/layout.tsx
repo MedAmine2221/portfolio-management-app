@@ -18,8 +18,8 @@ export default function RootLayout({
   const pathname = usePathname();
   useEffect(() => {
     async function checkSession() {
-      const verify = await hasNextAuthSessionToken();
-      if (!verify && pathname !== "/auth") {
+      const verify = await hasNextAuthSessionToken();      
+      if (verify === false && pathname !== "/auth") {
         alert("Your session has expired. Please log in again.");
         await signOut({ redirect: false });
         router.push("/auth");

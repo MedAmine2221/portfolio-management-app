@@ -31,7 +31,6 @@ export function NameAbreviation(lastName: string, firstName: string) {
 export const login = async (
   data: any,
   dispatch: AppDispatch,
-  router: any,
 ) => {
   dispatch(setLoadingTrue());
 
@@ -52,11 +51,9 @@ export const login = async (
           
         dispatch(setCalendar(events));
         dispatch(setClients(users));
-        router.replace("/calendar/month-view");
     }
   } catch (error: any) {
     console.error("Firebase sign-in failed:", error);
-    // DO NOT crash render
     alert(error?.message ?? "Login failed");
   } finally {
     dispatch(setLoadingFalse());

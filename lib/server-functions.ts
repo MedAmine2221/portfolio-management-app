@@ -10,15 +10,6 @@ export async function hasNextAuthSessionToken(): Promise<boolean> {
   return !!sessionCookie || !!sessionCookieProd;
 }
 
-export async function hasCookies(): Promise<boolean> {
-  const cookieStore = cookies();
-  const callBackCookie = (await cookieStore).get("__Secure-next-auth.callback-url");
-  const csrfCookie = (await cookieStore).get("__Host-next-auth.csrf-token");
-  const callBackCookieLocal = (await cookieStore).get("next-auth.callback-url");
-  const csrfCookieLocal = (await cookieStore).get("next-auth.csrf-token");
-  return (!!callBackCookie && !!csrfCookie) || (!!callBackCookieLocal && !!csrfCookieLocal);
-}
-
 export const getCalendar = async () => {
   const contactsSnapshot = await adminDb.collection("contact").get();
 

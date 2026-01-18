@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { RootState } from "@/redux/store";
 import { login } from "@/lib/utils";
 import { ChildrenProps } from "@/types/interfaces";
+import { hasNextAuthSessionToken } from "@/lib/server-functions";
 
 export default function ChangePathProvider({
   children,
@@ -18,24 +19,25 @@ export default function ChangePathProvider({
   const dispatch = useDispatch();  
   useEffect(() => {
     const checkToken = async () => {
-      if (token != "") {
+      const verify = await hasNextAuthSessionToken();
+      if (token != "" && verify) {
         login(
           {
             email: auth.email,
             password: auth.password,
           },
           dispatch,
-          router,
-        ); 
+        );
+        router.replace("/calendar/month-view");
       } else {
-        if (pathname != "/auth") {
+        if (pathname !== "/auth") {
           router.replace("/auth");
         }
       }
     };
 
     checkToken();
-  }, [router,token]);
+  }, [router,token, pathname]);
 
   return <>{children}</>;
 }

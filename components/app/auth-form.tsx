@@ -14,7 +14,7 @@ import { login } from "@/lib/utils";
 import { RootState } from "@/redux/store";
 import { clearAuth, setAuth } from "@/redux/auth/authReducer";
 import { useSession, signIn } from "next-auth/react";
-import { hasCookies } from "@/lib/server-functions";
+import { hasNextAuthSessionToken } from "@/lib/server-functions";
 export default function AuthForm() {
   const {data: session} = useSession();
   const loading = useSelector((item: RootState) => item?.loading?.loading);
@@ -41,25 +41,26 @@ export default function AuthForm() {
   const [isPassword, setIsPassword] = useState(true);
   const router = useRouter();
   const submit = async (data: any) => {
-    const verify = hasCookies();
-    if (!verify === false){
-      window.location.reload();
+    await login(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      dispatch,
+    );
+
+    const verify = await hasNextAuthSessionToken();
+
+    if (!verify) {
+      await signIn("google", {
+        callbackUrl: "/calendar/month-view",
+      });
       return;
-    }else{
-      login(
-        {
-          email: data.email,
-          password: data.password,
-        },
-        dispatch,
-        router,
-      );
-      if (!session) {      
-        await signIn("google");
-      }  
+    } else {
       router.replace("/calendar/month-view");
     }
   };
+
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(submit)}>
