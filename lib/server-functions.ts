@@ -14,8 +14,8 @@ export async function clearCookies() {
 export async function hasNextAuthSessionToken(): Promise<boolean> {
   const cookieStore = cookies();
   const sessionCookie = (await cookieStore).get("next-auth.session-token");
-
-  return !!sessionCookie;
+  const sessionCookieProd = (await cookieStore).get("__Secure-next-auth.session-token");
+  return !!sessionCookie || !!sessionCookieProd;
 }
 export const getCalendar = async () => {
   const contactsSnapshot = await adminDb.collection("contact").get();
