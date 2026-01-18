@@ -9,11 +9,11 @@ export default function Auth() {
   return (
     <div className="w-full flex items-center justify-center p-4">
       <div className="flex flex-col justify-between items-center">
-        <p className="text-5xl my-20 font-bold">
+        <p className="text-center text-5xl my-20 font-bold">
           Mohamed Amine&apos;s Portfolio Management
         </p>
-        <div className="flex flex-row justify-center items-center">
-          <div>
+        <div className="flex flex-col lg:flex-row justify-center items-center">
+          <div className="sm:my-8 lg:mr-16">
             <Image alt="amine" height={600} src="/amine.png" width={600} />
           </div>
           <div className="w-full max-w-md bg-white/10 backdrop-blur-sm shadow-2xl rounded-2xl p-8 flex flex-col gap-6">
