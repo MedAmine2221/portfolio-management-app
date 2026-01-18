@@ -43,7 +43,7 @@ export default function AuthForm() {
   const submit = async (data: any) => {
     const verify = hasCookies();
     if (!verify){
-      router.refresh();
+      window.location.reload();
       return;
     }
     login(
