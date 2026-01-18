@@ -28,7 +28,9 @@ export default function ChangePathProvider({
           },
           dispatch,
         );
-        router.replace("/calendar/month-view");
+        if(pathname === "/auth" || pathname === "/") {
+          router.replace("/calendar/month-view");
+        }
       } else {
         if (pathname !== "/auth") {
           router.replace("/auth");
