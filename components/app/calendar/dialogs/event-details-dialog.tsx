@@ -64,12 +64,12 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
     try {
       if(event){
         setLoading(true);
-        await updateMeetingLink({
+        const info = await updateMeetingLink({
           eventId: event?.meetingGoogleId || "",
           startDate: start,
           endDate: end,
         });
-        const ancienne_date = `${new Date(event?.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(event?.startDate).getFullYear()}`;
+        const ancienne_date = `${new Date(event?.startDate).toISOString().split("T")[0]}`;
         const eventRef = doc(
           db,
           "contact",
@@ -81,23 +81,24 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
         await updateDoc(eventRef, {
           startDate: data.startDate,
           endDate: data.endDate,
-          lienMeet: "https//:www.google.com",
+          meetingLink: info?.meetLink || "",
+          meetingGoogleId: info?.eventId || "",
           updatedAt: new Date().toISOString(),
         });
 
         const template = getTemplateMail({
           data: {
             client: event?.user.name,
-            date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+            date: `${new Date(data?.startDate).toISOString().split("T")[0]}`,
             startDate:
               new Date(data.startDate).getHours() +
               "h:" +
               new Date(data.startDate).getMinutes() +
               "min",
-              object: event?.title,
+            object: event?.title,
             ancienne_date: ancienne_date,
             edit: true,
-            lientMeet: "https//:www.google.com",
+            lienMeet: info?.meetLink || "",
           },
         });
         await sendMail(

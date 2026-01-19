@@ -717,7 +717,7 @@ export const updateMeetingLink = async ({
     startDate,
     endDate,
 }: any) =>{
-    await fetch("/api/update-meet", {
+    const res = await fetch("/api/update-meet", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -726,6 +726,17 @@ export const updateMeetingLink = async ({
             endDate,
         }),
     });
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data.error);
+      return;
+    }
+    
+    return {
+        meetLink: data.meetLink,
+        eventId: data.eventId,
+    }
 
 }
 

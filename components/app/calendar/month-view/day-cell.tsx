@@ -39,7 +39,7 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
       const template = getCancelTemplateMail({
         data: {
           client: event.user.name,
-          date: `${new Date(event.startDate).getDay()} ${monthsList[new Date(event.startDate).getMonth()]} ${new Date(event.startDate).getFullYear()}`,
+          date: `${new Date(event.startDate).toISOString().split("T")[0]}`,
           startDate:
             new Date(event.startDate).getHours() +
             "h:" +

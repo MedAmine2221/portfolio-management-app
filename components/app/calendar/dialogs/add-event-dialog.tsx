@@ -124,7 +124,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
           data: {
             client:
             selectedClientInfo?.firstName + " " + selectedClientInfo?.lastName,
-            date: `${new Date(data.startDate).getDay()} ${monthsList[new Date(data.startDate).getMonth()]} ${new Date(data.startDate).getFullYear()}`,
+            date: `${new Date(data.startDate).toISOString().split("T")[0]}`,
             startDate:
             new Date(data.startDate).getHours() +
             "h:" +
