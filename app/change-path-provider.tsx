@@ -16,18 +16,21 @@ export default function ChangePathProvider({
   const pathname = usePathname();
   const auth = useSelector((item: RootState) => item.auth.auth);
   const token = useSelector((item:RootState)=>item.token.token);
+  const connected = useSelector((item:RootState)=>item.connected.connected);
   const dispatch = useDispatch();  
   useEffect(() => {
     const checkToken = async () => {
       const verify = await hasNextAuthSessionToken();
       if (token != "" && verify) {
-        login(
-          {
-            email: auth.email,
-            password: auth.password,
-          },
-          dispatch,
-        );
+        if(!connected){
+          login(
+            {
+              email: auth.email,
+              password: auth.password,
+            },
+            dispatch,
+          );
+        }
         if(pathname === "/auth" || pathname === "/") {
           router.replace("/calendar/month-view");
         }

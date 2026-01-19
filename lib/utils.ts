@@ -10,6 +10,7 @@ import { setCalendar } from "@/redux/calendar/calendarReducer";
 import { setClients } from "@/redux/clients/clientReducer";
 import { AppDispatch } from "@/redux/store";
 import { setToken } from "@/redux/token/tokenReducer";
+import { setConnectedTrue } from "@/redux/connectedReducer";
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -51,6 +52,7 @@ export const login = async (
           
         dispatch(setCalendar(events));
         dispatch(setClients(users));
+        dispatch(setConnectedTrue());
     }
   } catch (error: any) {
     console.error("Firebase sign-in failed:", error);
