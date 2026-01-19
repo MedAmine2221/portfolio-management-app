@@ -2,10 +2,10 @@
 import "@/styles/globals.css";
 import { FaCopyright } from "react-icons/fa";
 
-import { Providers } from "./providers";
-import { ReduxProviders } from "./redux-provider";
+import { Providers } from "../providers/providers";
+import { ReduxProviders } from "../providers/redux-provider";
 
-import ChangePathProvider from "./change-path-provider";
+import ChangePathProvider from "../providers/change-path-provider";
 import { SessionProvider, signOut } from "next-auth/react";
 import { ChildrenProps } from "@/types/interfaces";
 import { useEffect } from "react";
