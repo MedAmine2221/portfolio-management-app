@@ -30,7 +30,6 @@ import { addMeetingLink, getTemplateMail } from "@/lib/utils";
 import { getClientById, sendMail } from "@/lib/server-functions";
 import { monthsList } from "@/constants";
 import { ChildrenProps } from "@/types/interfaces";
-import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { addEvent } from "@/redux/calendar/calendarReducer";
 
 export function AddEventDialog({ children }: ChildrenProps) {
@@ -48,7 +47,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
       endDate: new Date().toISOString(),
     },
   });
-  const loading = useSelector((state: RootState) => state.loading.loading);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const clientsList = useSelector((state: RootState) => state.clients.clients);
@@ -96,7 +95,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
       return;
     }
     try {
-      dispatch(setLoadingTrue());
+      setLoading(true);
       const info = await addMeetingLink(
         {
           title: (await clientInfo).object || "",
@@ -167,7 +166,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
       console.error(error);
       alert("error whene adding event");
     } finally {
-      dispatch(setLoadingFalse());
+      setLoading(false);
       resetForm();
       setOpen(false);
     }

@@ -1,7 +1,7 @@
 "use client";;
 import type { DayCellProps } from "@/types/interfaces";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { isToday, startOfDay } from "date-fns";
 
 import { EventBullet } from "@/components/app/calendar/month-view/event-bullet";
@@ -12,15 +12,13 @@ import { FiTrash2 } from "react-icons/fi";
 import { deleteEvent, sendMail } from "@/lib/server-functions";
 import { DeleteEventDialog } from "../dialogs/delete-event-dialog";
 import { MAX_VISIBLE_EVENTS, monthsList } from "@/constants";
-import { RootState } from "@/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Loader2 } from "lucide-react";
-import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
 import { deleteEventFromCalendar } from "@/redux/calendar/calendarReducer";
 
 
 export function DayCell({ cell, events, eventPositions }: DayCellProps) {
-  const loading = useSelector((state: RootState) => state.loading.loading);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { day, currentMonth, date } = cell;
 
@@ -31,7 +29,7 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
   const isSunday = date.getDay() === 0;
   const onDelete = async (event: any) => {
     try{
-      dispatch(setLoadingTrue());
+      setLoading(true);
       deleteEvent(event.user.id, String(event.id))
       if(event.meetingGoogleId){                        
         await deleteMeetingLink({
@@ -63,7 +61,7 @@ export function DayCell({ cell, events, eventPositions }: DayCellProps) {
       console.error("Error deleting event:", err);
     }finally{
       dispatch(deleteEventFromCalendar({id: event.id}));
-      dispatch(setLoadingFalse());
+      setLoading(false);
     }
   }
   return (

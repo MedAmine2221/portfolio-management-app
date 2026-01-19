@@ -24,14 +24,12 @@ import { Button } from "@/components/shadcnUI/ui/button";
 import { getTemplateMail, updateMeetingLink } from "@/lib/utils";
 import { sendMail } from "@/lib/server-functions";
 import { monthsList } from "@/constants";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setLoadingFalse, setLoadingTrue } from "@/redux/loadingReducer";
+import { useDispatch } from "react-redux";
 import { updateEvent } from "@/redux/calendar/calendarReducer";
 
 export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const loading = useSelector((state: RootState) => state.loading.loading);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [start, setStart] = useState(
     () => event?.startDate || new Date().toISOString(),
@@ -65,7 +63,7 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
   const onSubmit = async (data: any) => {
     try {
       if(event){
-        dispatch(setLoadingTrue());
+        setLoading(true);
         await updateMeetingLink({
           eventId: event?.meetingGoogleId || "",
           startDate: start,
@@ -120,7 +118,7 @@ export function EventDetailsDialog({ event, children }: ChildrenProps) {
       console.error(error);
       alert("Error updating event");
     } finally {
-      dispatch(setLoadingFalse());
+      setLoading(false);
       dispatch(updateEvent({
         id: event?.id,
         startDate: start,
