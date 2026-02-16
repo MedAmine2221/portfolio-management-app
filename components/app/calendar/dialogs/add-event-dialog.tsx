@@ -116,6 +116,7 @@ export function AddEventDialog({ children }: ChildrenProps) {
           meetingLink: info?.meetLink || "",
           meetingGoogleId: info?.eventId || "",
           createdAt: new Date().toISOString(),
+          status: "Waiting"
         });
         const selectedClientInfo: any = clientsList.find(
           (item: any) => item?.id === selectedClient,
